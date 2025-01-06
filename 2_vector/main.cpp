@@ -2,6 +2,9 @@
 #include <vector>
 #include <algorithm>
 
+/// @brief 打印vector函数
+/// @tparam T 
+/// @param vec 
 template <typename T>
 void printVector(const std::vector<T>& vec) {
     for (const T& v : vec) {
