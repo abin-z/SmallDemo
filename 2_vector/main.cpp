@@ -30,7 +30,6 @@ int main() {
     printVector(vec3);
 
     // 添加元素
-    vec1.push_back(20);
     vec1.push_back(30);
     std::cout << "vec1 after push_back: ";
     printVector(vec1);
