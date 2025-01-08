@@ -1,4 +1,4 @@
-set(tgt_name vector)
+set(tgt_name sizeof)
 
 file(GLOB_RECURSE headers CONFIGURE_DEPENDS *.h *.hpp)
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS *.c *.cpp *.cc *.cxx)
