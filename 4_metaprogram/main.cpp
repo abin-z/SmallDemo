@@ -1,7 +1,6 @@
 #include <iostream>
 
-// 模版元编程
-
+// 模版元编程 - 枚举的方式
 template<long long n>
 struct Factorial
 {
@@ -14,16 +13,17 @@ struct Factorial<0>
 	enum{value = 1};
 };
 
+// 模板元编程 - 静态成员变量
 template<long long n>
 struct Factor
 {
-	static const long long value = n * Factor<n-1>::value; 
+	static constexpr  long long value = n * Factor<n-1>::value; 
 };
 
 template<>
-struct Factor<0>
+struct Factor<0> // 终止条件
 {
-	static const long long value = 1;
+	static constexpr  long long value = 1;
 };
 
 int main(const int argc, const char *argv[])
