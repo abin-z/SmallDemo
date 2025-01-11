@@ -22,12 +22,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/build_output/bin)
 # 可执行文件输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/build_output/bin)
 
-# 添加 fmt 库
-add_subdirectory(external/fmt)
-
 # 添加子目录
 # 每个子目录对应一个模块
-add_subdirectory(1_hello)     # 示例 1：Hello World 模块
+add_subdirectory(external/fmt)  # 添加 fmt 库
+add_subdirectory(1_hello)       # 示例 1：Hello World 模块
 add_subdirectory(2_vector)
 add_subdirectory(3_sizeof)
 add_subdirectory(4_metaprogram)

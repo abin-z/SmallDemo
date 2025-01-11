@@ -40,7 +40,8 @@
   
   # 添加子目录
   # 每个子目录对应一个模块
-  add_subdirectory(1_hello)     # 示例 1：Hello World 模块
+  add_subdirectory(external/fmt)  # 添加 fmt 库
+  add_subdirectory(1_hello)       # 示例 1：Hello World 模块
   add_subdirectory(2_vector)
   add_subdirectory(3_sizeof)
   add_subdirectory(4_metaprogram)
@@ -73,6 +74,10 @@
   # 指定 ./ 目录，让目标及其用户能够访问 ./ 下的头文件
   # PUBLIC 意味着 . 目录会被传播给目标的依赖者
   target_include_directories(${tgt_name} PUBLIC .)
+
+  # 链接 fmt 库到目标
+  # PRIVATE 表示 fmt 库只在目标本身使用，且不会传播给其他依赖此目标的目标
+  target_link_libraries(${tgt_name} PRIVATE fmt)
   ```
 
 ### 3. 构建和运行流程
