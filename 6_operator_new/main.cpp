@@ -38,31 +38,30 @@ Placement new 经常用于自定义的内存池或固定分配区域，以优化
 因为 Placement new 不管理内存，所以你需要手动调用析构函数，并管理内存释放。
 */
 
-
 /// @brief 重载全局的operator new
 /// @param size
 /// @return
 void *operator new(std::size_t size)
 {
-    // avoid std::malloc(0) which may return nullptr on success
-    if (size == 0)
-    {
-        ++size;
-    }
-    fmt::println("global void *operator new(std::size_t size) called. size = {}", size);
-    if (void *ptr = std::malloc(size))
-    {
-        return ptr;
-    }
-    throw std::bad_alloc{};
+  // avoid std::malloc(0) which may return nullptr on success
+  if (size == 0)
+  {
+    ++size;
+  }
+  fmt::println("global void *operator new(std::size_t size) called. size = {}", size);
+  if (void *ptr = std::malloc(size))
+  {
+    return ptr;
+  }
+  throw std::bad_alloc{};
 }
 
 /// @brief 重载全局的 operator delete
 /// @param p
 void operator delete(void *ptr) noexcept
 {
-    fmt::println("global void operator delete(void *p) called.");
-    std::free(ptr);
+  fmt::println("global void operator delete(void *p) called.");
+  std::free(ptr);
 }
 
 /// @brief 重载全局的operator new[]
@@ -70,85 +69,86 @@ void operator delete(void *ptr) noexcept
 /// @return
 void *operator new[](std::size_t size)
 {
-    if (size == 0)
-    {
-        ++size;
-    }
-    fmt::println("global void *operator new[](std::size_t size) called. size = {}", size);
-    if (void *ptr = std::malloc(size))
-    {
-        return ptr;
-    }
-    throw std::bad_alloc{};
+  if (size == 0)
+  {
+    ++size;
+  }
+  fmt::println("global void *operator new[](std::size_t size) called. size = {}", size);
+  if (void *ptr = std::malloc(size))
+  {
+    return ptr;
+  }
+  throw std::bad_alloc{};
 }
 
 /// @brief 重载全局的operator delete[]
 /// @param ptr
 void operator delete[](void *ptr) noexcept
 {
-    fmt::println("global void operator delete[](void *ptr) called.");
-    std::free(ptr);
+  fmt::println("global void operator delete[](void *ptr) called.");
+  std::free(ptr);
 }
 
 /// @brief 重载不抛异常的全局operator new
 /// @param size
 /// @return
-void *operator new(std::size_t size, const std::nothrow_t&) noexcept
+void *operator new(std::size_t size, const std::nothrow_t &) noexcept
 {
-    // avoid std::malloc(0) which may return nullptr on success
-    if (size == 0)
-    {
-        ++size;
-    }
-    fmt::println("global void *operator new(std::size_t size, const std::nothrow_t&) noexcept called. size = {}", size);
-    return std::malloc(size);
+  // avoid std::malloc(0) which may return nullptr on success
+  if (size == 0)
+  {
+    ++size;
+  }
+  fmt::println("global void *operator new(std::size_t size, const std::nothrow_t&) noexcept called. size = {}", size);
+  return std::malloc(size);
 }
 
 /// @brief 重载不抛异常的全局operator new[]
 /// @param size
 /// @return
-void *operator new[](std::size_t size, const std::nothrow_t&) noexcept
+void *operator new[](std::size_t size, const std::nothrow_t &) noexcept
 {
-    // avoid std::malloc(0) which may return nullptr on success
-    if (size == 0)
-    {
-        ++size;
-    }
-    fmt::println("global void *operator new[](std::size_t size, const std::nothrow_t&) noexcept called. size = {}", size);
-    return std::malloc(size);
+  // avoid std::malloc(0) which may return nullptr on success
+  if (size == 0)
+  {
+    ++size;
+  }
+  fmt::println("global void *operator new[](std::size_t size, const std::nothrow_t&) noexcept called. size = {}", size);
+  return std::malloc(size);
 }
 
 /// @brief 全局的placement new, 不会调用任何分配内存的操作
-/// @param size 
-/// @param ptr 
-/// @return 
+/// @param size
+/// @param ptr
+/// @return
 // void* operator new(std::size_t size, void* ptr) noexcept {
 //     return ptr;
 // }
 
 int main()
 {
-    fmt::println("==================================================");
-    // 调用operator new
-    int *p = new int{10};
-    delete p;
+  fmt::println("==================================================");
+  // 调用operator new
+  int *p = new int{10};
+  delete p;
 
-    // 调用operator new[]
-    int *arr = new int[10];
-    delete[] arr;
+  // 调用operator new[]
+  int *arr = new int[10];
+  delete[] arr;
 
-    // 调用不抛异常版的 operator new
-    int *ptr = new(std::nothrow)int{20};
-    if(!ptr) *ptr = 30;
-    delete ptr;
+  // 调用不抛异常版的 operator new
+  int *ptr = new (std::nothrow) int{20};
+  if (!ptr)
+    *ptr = 30;
+  delete ptr;
 
-    // 调用不抛异常版的 operator new[]
-    int *ptrArr = new(std::nothrow)int[20];
-    delete ptrArr;
-    
-    fmt::println("==================================================");
-    Person *p1 = new Person(10);
-    delete p1;
+  // 调用不抛异常版的 operator new[]
+  int *ptrArr = new (std::nothrow) int[20];
+  delete ptrArr;
 
-    fmt::println("==================================================");
+  fmt::println("==================================================");
+  Person *p1 = new Person(10);
+  delete p1;
+
+  fmt::println("==================================================");
 }

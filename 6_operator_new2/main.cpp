@@ -40,37 +40,37 @@ Placement new 经常用于自定义的内存池或固定分配区域，以优化
 
 int main()
 {
-    fmt::println("==================================================");
-    Person *p1 = new Person(10);
-    delete p1;
+  fmt::println("==================================================");
+  Person *p1 = new Person(10);
+  delete p1;
 
-    // 在栈空间使用 placement new 创建对象
-    fmt::println("==================================================");
-    char buffer[sizeof(Person)];// 在栈区分配内存
-    fmt::println("char buffer address = {:p}", buffer);
-    Person *p2 = new(buffer)Person(22); // 调用的Person类重载的placement new, 会在buffer的内存空间上构建Person对象(调用构造函数)
-    fmt::println("p2 = {}", p2->toString());
-    p2->~Person();  // 必须手动调用析构函数
+  // 在栈空间使用 placement new 创建对象
+  fmt::println("==================================================");
+  char buffer[sizeof(Person)]; // 在栈区分配内存
+  fmt::println("char buffer address = {:p}", buffer);
+  Person *p2 = new (buffer) Person(22); // 调用的Person类重载的placement new, 会在buffer的内存空间上构建Person对象(调用构造函数)
+  fmt::println("p2 = {}", p2->toString());
+  p2->~Person(); // 必须手动调用析构函数
 
-    // 在栈空间使用 placement new 创建对象
-    fmt::println("==================================================");
-    constexpr int count = 6;
-    char buffer2[sizeof(Person) * count];
-    Person *arr = reinterpret_cast<Person*>(buffer2);
-    // 批量构造
-    for (size_t i = 0; i < count; ++i)
-    {
-        new(arr + i)Person(20 + i); // 调用Person构造函数在buffer2上构建对象
-    }
-    // 访问Person
-    for (size_t i = 0; i < count; ++i)
-    {
-        fmt::println("person{}: {}", i, arr[i].toString());
-    }
-    // 批量析构
-    for (size_t i = 0; i < count; ++i)
-    {
-        arr[i].~Person();
-    }
-    fmt::println("==================================================");
+  // 在栈空间使用 placement new 创建对象
+  fmt::println("==================================================");
+  constexpr int count = 6;
+  char buffer2[sizeof(Person) * count];
+  Person *arr = reinterpret_cast<Person *>(buffer2);
+  // 批量构造
+  for (size_t i = 0; i < count; ++i)
+  {
+    new (arr + i) Person(20 + i); // 调用Person构造函数在buffer2上构建对象
+  }
+  // 访问Person
+  for (size_t i = 0; i < count; ++i)
+  {
+    fmt::println("person{}: {}", i, arr[i].toString());
+  }
+  // 批量析构
+  for (size_t i = 0; i < count; ++i)
+  {
+    arr[i].~Person();
+  }
+  fmt::println("==================================================");
 }
