@@ -1,5 +1,6 @@
 #include <fmt/core.h>
 #include <new>
+#include "person.hpp"
 
 /*
 在C++中，operator new和new operator还是很有区别。new operator是c++内建的，无法改变其行为；而operator new 是可以根据自己的内存分配策略去重载的。
@@ -20,6 +21,21 @@
 
 operator new 唯一的任务就是分配内存，new operator的任务是取得 operator new 分配的内存，并将之转换为一个对象，返回一个指向它的指针；
 同理operator delete的唯一任务是释放内存空间，它不能调用析构函数；
+
+
+3. Placement new 特点
+不分配内存：
+Placement new 不会调用任何分配内存的操作（如 malloc 或 operator new）。
+它只负责调用构造函数。
+
+必须提供已有的内存块：
+使用者必须显式提供一块足够大的内存，以存储对象。
+
+常用于内存池：
+Placement new 经常用于自定义的内存池或固定分配区域，以优化性能。
+
+需要显式析构：
+因为 Placement new 不管理内存，所以你需要手动调用析构函数，并管理内存释放。
 */
 
 
@@ -102,12 +118,17 @@ void *operator new[](std::size_t size, const std::nothrow_t&) noexcept
     return std::malloc(size);
 }
 
-// TODO replacement new
-
+/// @brief 全局的placement new, 不会调用任何分配内存的操作
+/// @param size 
+/// @param ptr 
+/// @return 
+// void* operator new(std::size_t size, void* ptr) noexcept {
+//     return ptr;
+// }
 
 int main()
 {
-    fmt::println("hello operator new");
+    fmt::println("==================================================");
     // 调用operator new
     int *p = new int{10};
     delete p;
@@ -124,4 +145,10 @@ int main()
     // 调用不抛异常版的 operator new[]
     int *ptrArr = new(std::nothrow)int[20];
     delete ptrArr;
+    
+    fmt::println("==================================================");
+    Person *p1 = new Person(10);
+    delete p1;
+
+    fmt::println("==================================================");
 }
