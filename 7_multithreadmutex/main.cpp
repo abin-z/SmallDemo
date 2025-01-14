@@ -19,7 +19,7 @@ void incrementWithMutex()
 {
   for (size_t i = 0; i < 100000; ++i)
   {
-    std::lock_guard<std::mutex> locker(mtx);  // 自动加锁和解锁
+    std::lock_guard<std::mutex> locker(mtx); // 自动加锁和解锁
     ++sharedData;
   }
 }
@@ -33,8 +33,8 @@ int main()
   t1.join();
   t2.join();
   t3.join();
-  fmt::println("===============================================");
-  fmt::println("incrementWithoutMutex sharedData = {}, is error!", sharedData);
+  fmt::println("=======================start========================");
+  fmt::println("incrementWithoutMutex sharedData = {}, is incorrect!", sharedData);
 
   fmt::println("===============================================");
   sharedData = 0;
@@ -45,7 +45,7 @@ int main()
   tt1.join();
   tt2.join();
   tt3.join();
-  fmt::println("incrementWithMutex sharedData = {}", sharedData);
-  fmt::println("===============================================");
+  fmt::println("incrementWithMutex sharedData = {}, is correct!", sharedData);
+  fmt::println("=======================end========================");
   return 0;
 }
