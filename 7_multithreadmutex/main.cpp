@@ -51,7 +51,7 @@ int main()
   fmt::println("=======================start========================");
   fmt::println("incrementWithoutMutex sharedData = {}, is incorrect!", sharedData);
 
-  fmt::println("--------------------");
+  fmt::println("*--------------------");
   sharedData = 0;
   std::thread tt1(incrementWithMutex);
   std::thread tt2(incrementWithMutex);
@@ -63,7 +63,7 @@ int main()
   fmt::println("incrementWithMutex sharedData = {}, is correct!", sharedData);
 
 
-  fmt::println("--------------------");
+  fmt::println("*--------------------");
   std::thread ttt1(incrementAtomic);
   std::thread ttt2(incrementAtomic);
   std::thread ttt3(incrementAtomic);
