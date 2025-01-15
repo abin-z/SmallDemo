@@ -34,7 +34,8 @@ void incrementAtomic()
 {
   for (size_t i = 0; i < 100000; ++i)
   {
-    atomic_sharedData.fetch_add(3);
+    ++atomic_sharedData;
+    atomic_sharedData.fetch_add(2);
   }
 }
 
