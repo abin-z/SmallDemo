@@ -4,20 +4,23 @@
 #include <queue>
 #include <utility>
 #include <atomic>
+#include <limits>
 
 #include <fmt/core.h>
 
 std::mutex mtx;             // 互斥量
 std::condition_variable cv; // 条件变量
 
-std::deque<int> dataQueue;  // 共享消费队列
-bool isFinished = false;    // 是否全部生产完成, 可以使用std::atomic<bool>
+std::deque<int> dataQueue; // 共享消费队列
+bool isFinished = false;   // 是否全部生产完成, 可以使用std::atomic<bool>
 
 /// @brief 获取线程id
 /// @return
 size_t tid()
 {
-  return std::hash<std::thread::id>{}(std::this_thread::get_id());
+  // thread_local 关键字修饰的变量具有线程（thread）周期，这些变量在线程开始的时候被生成，在线程结束的时候被销毁，并且每一个线程都拥有一个独立的变量实例
+  static thread_local size_t tid = std::hash<std::thread::id>{}(std::this_thread::get_id()) % std::numeric_limits<uint16_t>::max();
+  return tid;
 }
 
 /// @brief 生产者
@@ -31,7 +34,7 @@ void producer(int num)
       std::lock_guard<std::mutex> locker(mtx);
       dataQueue.push_back(tatget);
     }
-    fmt::println("[{:#x}] product finish num = {}", tid(), tatget);
+    fmt::println("[{:#06x}] Produced num = {}", tid(), tatget);
     cv.notify_one();
   }
   // 通知消费者已全部生产完成
@@ -48,13 +51,14 @@ void consumer()
   while (true)
   {
     std::unique_lock<std::mutex> locker(mtx);
-    cv.wait(locker, []{ return !dataQueue.empty() || isFinished; }); // 等待条件满足
+    cv.wait(locker, []
+            { return !dataQueue.empty() || isFinished; }); // 等待条件满足
     // // 消费方式1 ------------------------start
     // while (!dataQueue.empty())
     // {
     //   int val = dataQueue.front();
     //   dataQueue.pop_front();
-    //   fmt::println("[{:#x}] consume value = {}", tid(), val);
+    //   fmt::println("[{:#x}] Consumed value = {}", tid(), val);
     // }
     // // 消费方式1 ------------------------end
 
@@ -63,7 +67,7 @@ void consumer()
     std::swap(localQueue, dataQueue);
     for (int val : localQueue)
     {
-      fmt::println("[{:#x}] consume value = {}", tid(), val);
+      fmt::println("[{:#06x}] Consumed value = {}", tid(), val);
     }
     locker.unlock();
     // 消费方式2 ------------------------end
@@ -87,5 +91,6 @@ int main()
   t1.join();
   t2.join();
   t3.join();
+  fmt::println("All threads finished.");
   return 0;
 }
