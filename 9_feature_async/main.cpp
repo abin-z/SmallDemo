@@ -29,14 +29,39 @@ void say_hello()
   fmt::println("hello std::async. std::launch::deferred");
 }
 
+/// @brief 异步执行获取返回值的方式2
+/// @param promise
+/// @param x 参数
+void getResult(std::promise<int> &promise, int x)
+{
+  try
+  {
+    if (x > 0)
+    {
+      int ret = x * x * x;
+      promise.set_value(ret); // 设置值
+    }
+    else
+    {
+      throw std::runtime_error("Something went wrong at getResult()!");
+    }
+  }
+  catch (...)
+  {
+    promise.set_exception(std::current_exception()); // 抛出异常给 future
+  }
+}
+
 auto main() -> int
 {
   fmt::println("==========main runing...");
+  // 获取返回值的方式1: std::future + std::async
   std::future<int> task01 = std::async(std::launch::async, calculate_square, 5);
   std::future<bool> task02 = std::async(std::launch::async, do_something, true);
-  std::future<double> task03 = std::async(std::launch::async, [](double x) { return std::sqrt(x); }, 81);
   std::future<void> task04 = std::async(std::launch::deferred, say_hello); // std::launch::deferred 会推迟任务的执行
-
+  std::future<double> task03 = std::async(std::launch::async, [](double x)
+                                          { return std::sqrt(x); }, 81);
+  // 可以使用try-catch包含.get()
   int ret01 = task01.get();
   bool ret02 = task02.get();
   double ret03 = task03.get();
@@ -44,7 +69,26 @@ auto main() -> int
   fmt::println("Square of 5 is: {}", ret01);
   fmt::println("do_something function return: {}", ret02);
   fmt::println("lambda async retrun: {}", ret03);
-  task04.get();
+  task04.get(); // std::launch::deferred 这个时候才会执行task04;
+
+
+
+
+  fmt::println("====================");
+  // 获取返回值的方式2: std::promise + std::future
+  std::promise<int> prom;
+  std::future<int> fut = prom.get_future();
+  std::thread t1(getResult, std::ref(prom), 3);
+  try
+  {
+    int ret = fut.get(); // 阻塞直到获取到结果
+    fmt::println("getResult() = {}", ret);
+  }
+  catch (const std::exception &e)
+  {
+    fmt::println("Caught exception: {}", e.what());
+  }
+  t1.join();
   fmt::println("==========main end");
   return 0;
 }
