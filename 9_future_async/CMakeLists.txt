@@ -1,4 +1,4 @@
-set(tgt_name featureAsync)
+set(tgt_name futureAsync)
 
 file(GLOB_RECURSE headers CONFIGURE_DEPENDS *.h *.hpp)
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS *.c *.cpp *.cc *.cxx)
