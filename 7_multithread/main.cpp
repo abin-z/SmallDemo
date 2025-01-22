@@ -11,7 +11,6 @@ t.join()：主线程等待子线程完成。
 t.detach()：让线程在后台运行，主线程无需等待
 */
 
-
 void task01(int num)
 {
   std::size_t threadId = std::hash<std::thread::id>{}(std::this_thread::get_id());
@@ -34,9 +33,8 @@ int main()
 {
   fmt::println("==============main start...  main thread id = {:#x}", std::hash<std::thread::id>{}(std::this_thread::get_id()));
   // 直接使用lambda表达式
-  std::thread t0([]{
-    fmt::println("Hello, I am thread0. thread id = {:#x}", std::hash<std::thread::id>{}(std::this_thread::get_id()));
-  });
+  std::thread t0([]
+                 { fmt::println("Hello, I am thread0. thread id = {:#x}", std::hash<std::thread::id>{}(std::this_thread::get_id())); });
   t0.detach(); // 必须调用join或者detach, 否则会异常
 
   // 带参任务, 拷贝参数
@@ -49,6 +47,11 @@ int main()
   t2.join();
   fmt::println("ret2 = {}", ret2);
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+  // 返回当前系统的并发线程数，即系统能够同时运行的最大线程数。
+  unsigned int concurrency = std::thread::hardware_concurrency();
+  fmt::println("Hardware concurrency: {} threads.", concurrency);
+
   fmt::println("==============main end...");
 }
