@@ -1,8 +1,10 @@
+#include <mutex>
 #include <shared_mutex>
 #include <thread>
 #include <vector>
 #include <utility>
 #include <chrono>
+
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 
@@ -71,6 +73,7 @@ int main()
   {
     th.join();
   }
+  fmt::print("now data : {}\n", sharedData);
 
   return 0;
 }
