@@ -80,7 +80,7 @@ struct FileCloser
 /// @brief unique_ptr管理文件文件句柄
 void test04()
 {
-  std::unique_ptr<FILE, FileCloser> filePtr(fopen("example.txt", "r"));
+  std::unique_ptr<FILE, FileCloser> filePtr(fopen("example.txt", "w"));
   if(!filePtr)
   {
     fmt::print("文件不存在\n");
