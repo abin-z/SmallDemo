@@ -33,12 +33,12 @@ struct Object
 {
   Object()
   {
-    fmt::print("{}\n", __PRETTY_FUNCTION__);
+    fmt::print("Object constructor\n");
   }
 
   ~Object()
   {
-    fmt::print("{}\n", __PRETTY_FUNCTION__);
+    fmt::print("~Object destructor\n");
   }
 };
 
