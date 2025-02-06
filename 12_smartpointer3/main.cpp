@@ -88,20 +88,20 @@ void test03()
 
   if (auto locked = wp.lock()) // 提升 weak_ptr 为 shared_ptr
   { 
-    fmt::println("Object is still alive");
+    fmt::println("Object is still alive use_count = {}", sp.use_count());
   }
   else
   {
-    fmt::println("Object has been destroyed");
+    fmt::println("Object has been destroyed = {}", sp.use_count());
   }
   sp.reset(); // 释放 shared_ptr 持有的对象
   if (auto locked = wp.lock()) // 提升 weak_ptr 为 shared_ptr
   { 
-    fmt::println("Object is still alive");
+    fmt::println("Object is still use_count = {}", sp.use_count());
   }
   else
   {
-    fmt::println("Object has been destroyed");
+    fmt::println("Object has been destroyed = {}", sp.use_count());
   }
 }
 
