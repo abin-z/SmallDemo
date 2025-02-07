@@ -17,7 +17,7 @@
  * 如果关系是“强-弱”关系，应该让“主要拥有者”持有 shared_ptr，让“从属对象”持有 weak_ptr。
  */
 
-struct B; // 先声明 B
+struct B; //  前置声明 B
 struct A
 {
   std::shared_ptr<B> ptrB;
