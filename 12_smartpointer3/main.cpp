@@ -103,6 +103,7 @@ void test03()
   {
     fmt::println("Object has been destroyed = {}", sp.use_count());
   }
+  fmt::println("wp.expired() = {}", wp.expired()); // 如果 weak_ptr 观察的对象仍然存在，expired() 返回 false；如果对象已经被释放，expired() 返回 true。
 }
 
 int main()
