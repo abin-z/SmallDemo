@@ -63,15 +63,15 @@ void testTuple02()
   using funcType = std::tuple<int, std::string> (*)(); // 函数指针类型
   std::tuple<int, std::string, double, point, int64_t, funcType> tp{32, "Apple", 4.5, {1, 2, 3}, 99999, getData};
   // std::tuple_size 用于获取 std::tuple 类型中元素的数量。它是一个类型特征，返回一个表示元组元素数量的常量。
-  size_t size = std::tuple_size<decltype(tp)>::value; 
+  size_t size = std::tuple_size<decltype(tp)>::value;
   fmt::print("std::tuple_size<decltype(tp)>::value = {}\n", size);
   // std::tuple_element 用于获取 std::tuple 中指定索引位置的元素类型。它是一个类型特征，返回元组中指定位置的元素类型。
-  fmt::println("std::tuple_element<0, decltype(tp)>::type).name() = {}",   typeid(std::tuple_element<0, decltype(tp)>::type).name());
-  fmt::println("std::tuple_element<1, decltype(tp)>::type).name() = {}",   typeid(std::tuple_element<1, decltype(tp)>::type).name());
-  fmt::println("std::tuple_element<2, decltype(tp)>::type).name() = {}",   typeid(std::tuple_element<2, decltype(tp)>::type).name());
-  fmt::println("std::tuple_element<3, decltype(tp)>::type).name() = {}",   typeid(std::tuple_element<3, decltype(tp)>::type).name());
-  fmt::println("std::tuple_element<4, decltype(tp)>::type).name() = {}",   typeid(std::tuple_element<4, decltype(tp)>::type).name());
-  fmt::println("std::tuple_element<5, decltype(tp)>::type).name() = {}",   typeid(std::tuple_element<5, decltype(tp)>::type).name());
+  fmt::println("std::tuple_element<0, decltype(tp)>::type).name() = {}", typeid(std::tuple_element<0, decltype(tp)>::type).name());
+  fmt::println("std::tuple_element<1, decltype(tp)>::type).name() = {}", typeid(std::tuple_element<1, decltype(tp)>::type).name());
+  fmt::println("std::tuple_element<2, decltype(tp)>::type).name() = {}", typeid(std::tuple_element<2, decltype(tp)>::type).name());
+  fmt::println("std::tuple_element<3, decltype(tp)>::type).name() = {}", typeid(std::tuple_element<3, decltype(tp)>::type).name());
+  fmt::println("std::tuple_element<4, decltype(tp)>::type).name() = {}", typeid(std::tuple_element<4, decltype(tp)>::type).name());
+  fmt::println("std::tuple_element<5, decltype(tp)>::type).name() = {}", typeid(std::tuple_element<5, decltype(tp)>::type).name());
 }
 
 int main()
