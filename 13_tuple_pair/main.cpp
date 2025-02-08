@@ -22,10 +22,22 @@ void testPair()
 void testTuple()
 {
   std::tuple<int, std::string, double, float> tp = {22, "xiaomi", 3.14, 2.1};
+  // 获取方式1
   fmt::print("tuple get<0> = {}\n", std::get<0>(tp));
   fmt::print("tuple get<1> = {}\n", std::get<1>(tp));
   fmt::print("tuple get<2> = {}\n", std::get<2>(tp));
   fmt::print("tuple get<3> = {}\n", std::get<3>(tp));
+  // 获取方式2
+  fmt::print("tuple get<int> = {}\n", std::get<int>(tp));
+  fmt::print("tuple get<std::string> = {}\n", std::get<std::string>(tp));
+  fmt::print("tuple get<double> = {}\n", std::get<double>(tp));
+  fmt::print("tuple get<float> = {}\n", std::get<float>(tp));
+  // 获取方式3, 结构化绑定C++17
+  const auto [a, s, n, m] = tp;
+  fmt::print("C++17 tuple get<0> = {}\n", a);
+  fmt::print("C++17 tuple get<1> = {}\n", s);
+  fmt::print("C++17 tuple get<2> = {}\n", n);
+  fmt::print("C++17 tuple get<3> = {}\n", m);
 }
 
 std::tuple<int, std::string> getData()
