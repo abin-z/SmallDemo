@@ -85,7 +85,11 @@ struct Number
   }
 };
 
-// 普通类的成员模版函数全特化
+/*
+C++ 规定模板的显式特化应该在 命名空间作用域 中进行，而不是类的内部。
+*/
+
+// 普通类的成员模版函数全特化-只能在类外特化
 template <>
 Number::operator short() const
 {
@@ -101,7 +105,8 @@ public:
   {
     fmt::println("Generic print: {}", value);
   }
-  // 模版函数特化
+#ifdef _MSC_VER // MSVC 编译器代码
+  // 模版函数特化 - 建议在外部特化, 内部支持的编译器较少, 不标准的做法
   template <>
   void print<double>(double value)
   {
@@ -113,9 +118,15 @@ public:
   {
     fmt::println("Specialized print for long long: {}", value);
   }
+#endif
+  // 函数重载, 优先级高于特化版本
+  void print(long value)
+  {
+    fmt::println("print for long : {}", value);
+  }
 };
 
-// 类外进行全特化
+// 类外进行全特化-推荐
 template <>
 void Printer::print<int>(int value)
 {
@@ -147,12 +158,13 @@ int main()
   char c = num;
   short s = num;
   fmt::println("short s = {}", s);
-  
+
   fmt::println("========== template full specialization ==========");
   Printer printer;
   printer.print(1);
   printer.print(3.14);
   printer.print("hello");
   printer.print(999999999ll);
+  printer.print(999999l);
   return 0;
 }
