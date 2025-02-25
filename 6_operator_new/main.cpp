@@ -144,7 +144,7 @@ int main()
 
   // 调用不抛异常版的 operator new[]
   int *ptrArr = new (std::nothrow) int[20];
-  delete ptrArr;
+  delete[] ptrArr;
 
   fmt::println("==================================================");
   Person *p1 = new Person(10);
