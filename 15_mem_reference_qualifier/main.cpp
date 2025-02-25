@@ -78,18 +78,49 @@ struct Number
     return static_cast<T>(data);
   }
 
-  // 模板特化为 char 类型
+  // 类型转换操作符
   operator char() const
   {
     return static_cast<char>(data);
   }
+};
 
-  // 模板特化为 short 类型
-  operator short() const
+// 普通类的成员模版函数全特化
+template <>
+Number::operator short() const
+{
+  return static_cast<short>(data);
+}
+
+class Printer
+{
+public:
+  // 成员函数模板
+  template <typename T>
+  void print(T value)
   {
-    return static_cast<short>(data);
+    fmt::println("Generic print: {}", value);
+  }
+  // 模版函数特化
+  template <>
+  void print<double>(double value)
+  {
+    fmt::println("Specialized print for double: {}", value);
+  }
+  // 模版函数特化
+  template <>
+  void print(long long value)
+  {
+    fmt::println("Specialized print for long long: {}", value);
   }
 };
+
+// 类外进行全特化
+template <>
+void Printer::print<int>(int value)
+{
+  fmt::println("Specialized print for int: {}", value);
+}
 
 int main()
 {
@@ -106,6 +137,7 @@ int main()
   static_cast<const Object>(Object{}).func02(); // const 右值对象
   getCObj().func02();                           // 右值对象
 
+  fmt::println("========== type conversion operators ==========");
   Number num;
   num.data = 99;
   int n = num; // 隐式转换
@@ -113,6 +145,14 @@ int main()
   long double ld = num;
   long long ll = num;
   char c = num;
-
+  short s = num;
+  fmt::println("short s = {}", s);
+  
+  fmt::println("========== template full specialization ==========");
+  Printer printer;
+  printer.print(1);
+  printer.print(3.14);
+  printer.print("hello");
+  printer.print(999999999ll);
   return 0;
 }
