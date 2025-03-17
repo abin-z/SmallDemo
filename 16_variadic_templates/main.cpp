@@ -40,6 +40,23 @@ void print(const T &value, Args... args)
   print(args...);                                               // 递归调用，处理剩余参数
 }
 
+
+
+// 终止递归的基函数(方式3)
+template <typename T>
+void print0(T &&val)
+{
+  std::cout << val << std::endl;
+}
+
+// 递归展开参数包, 使用万能引用+完美转发
+template <typename T, typename... Args>
+void print0(T &&val, Args &&...args)
+{
+  std::cout << val << " ";
+  print0(std::forward<Args>(args)...); // 完美转发,递归展开剩余参数
+}
+
 /**************************** 使用非递归展开参数包 ********************************/
 #if __cplusplus >= 201703L
 template <typename... Args>
@@ -112,6 +129,7 @@ int main()
   print4(true, false, 3.14, 200, 'c', "string");
   print5(true, false, 3.14, 200, 'c', "string");
 #endif
+  print0(true, false, 3.14, 200, 'c', "string");
 
   auto t = makeTuple(1, 2.5, "Hello");
   std::cout << std::get<0>(t) << " " << std::get<1>(t) << " " << std::get<2>(t) << std::endl;
