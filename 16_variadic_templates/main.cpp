@@ -78,6 +78,14 @@ void print2(Args... args)
   std::cout << std::endl;
 }
 
+/*
+  假设 print3(1, 2, 3);，参数 args... 展开为 1, 2, 3，则：
+  std::initializer_list<char>{
+      (std::cout << 1 << " ", '\0'),
+      (std::cout << 2 << " ", '\0'),
+      (std::cout << 3 << " ", '\0')
+  };
+*/
 template <typename... Args>
 void print3(Args... args)
 {
