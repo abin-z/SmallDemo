@@ -2,6 +2,15 @@
 #include <vector>
 #include <tuple>
 
+/**
+ * 可变参数模板(variadic template)为一个接受可变数目参数的模板函数或模板类。
+ * 参数包(parameter packet)可变数目的参数。
+ * 模板参数包(template parameter packet)表示零个或多个模板参数。
+ * 函数参数包(function parameter packet)表示零个或多个函数参数。
+ * 用省略号指出一个模板参数或函数参数表示一个包。
+ */
+
+
 /// @brief
 /// @tparam ...Args 类型参数包，可以接收 0 个或多个类型
 /// @param ...args  函数参数包，用于存储实际传入的参数

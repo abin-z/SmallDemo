@@ -8,6 +8,3 @@ target_sources(${tgt_name} PUBLIC ${headers})
 target_sources(${tgt_name} PRIVATE ${sources})
 
 target_include_directories(${tgt_name} PUBLIC .)
-
-# 链接 fmt 库
-target_link_libraries(${tgt_name} PRIVATE fmt)
