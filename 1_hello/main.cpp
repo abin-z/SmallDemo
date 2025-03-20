@@ -89,7 +89,7 @@ void test02()
   // 定义具体的指针
   mem_funcptr_t memfptr1 = &Object::set_value;
   mem_funcptr2_t memfptr2 = &Object::value;
-  (obj.*memfptr1)(888); // 调用函数, 必须使用obj, 而且需要()括起来
+  (obj.*memfptr1)(888); // 调用函数, 必须使用obj.*, 而且需要()括起来
   val = (obj.*memfptr2)();
   std::cout << "val = " << val << std::endl;
 }
