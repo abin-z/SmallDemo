@@ -71,7 +71,7 @@ T getSum(T val)
 }
 
 template <typename T, typename... Args>
-auto getSum(T first, Args... args) -> typename std::common_type<T, Args...>::type   // 这里使用decltype(first + getSum(args...))在Linux下不可行
+auto getSum(T first, Args... args) -> typename std::common_type<T, Args...>::type // 这里使用decltype(first + getSum(args...))在Linux下不可行
 {
   return first + getSum(args...);
 }
@@ -130,7 +130,7 @@ int main()
   invoke(&Test::sayHello, tst);           // 调用成员函数
   int val = invoke(&Test::getValue, tst); // 调用const成员函数
   std::cout << "invoke(&Test::getValue, tst) ret = " << val << std::endl;
-  invoke(&Test::print, tst, "variadic template nice!");
+  invoke(&Test::print, tst, "variadic template nice!"); // 注: 在c++11标准下还有问题, 但是在c++17下就没问题
 
   // 在c++17中有std::invoke, 很方便
   std::invoke(&Test::print, tst, "std::invoke nice!");
