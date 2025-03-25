@@ -34,7 +34,7 @@ void printNum(int flag)
 }
 
 
-// TODO 存在问题
+// TODO 存在问题, 会导致死锁问题, 程序无法退出
 int main()
 {
   std::thread t1(printNum, 0);
