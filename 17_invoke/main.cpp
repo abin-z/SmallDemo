@@ -2,6 +2,7 @@
 #include <utility>
 #include <functional>
 #include <string>
+#include <type_traits>
 #include <fmt/core.h>
 
 /// @brief 适用于 普通函数、Lambda、仿函数调用 (C++17后有std::invoke很方便)
@@ -70,7 +71,7 @@ T getSum(T val)
 }
 
 template <typename T, typename... Args>
-auto getSum(T first, Args... args) -> decltype(first + getSum(args...))
+auto getSum(T first, Args... args) -> typename std::common_type<T, Args...>::type   // 这里使用decltype(first + getSum(args...))在Linux下不可行
 {
   return first + getSum(args...);
 }
