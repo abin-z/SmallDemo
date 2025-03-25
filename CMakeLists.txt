@@ -22,6 +22,13 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/build_output/bin)
 # 可执行文件输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/build_output/bin)
 
+# # 仅在 Linux/macOS 上启用 pthread
+# if (UNIX)
+#     find_package(Threads REQUIRED)
+#     set(THREADS_PREFER_PTHREAD_FLAG ON)
+#     link_libraries(Threads::Threads)
+# endif()
+
 # 添加子目录
 # 每个子目录对应一个模块
 add_subdirectory(external/fmt)  # 添加 fmt 库
@@ -47,4 +54,4 @@ add_subdirectory(13_tuple_pair)
 add_subdirectory(14_callableobject)
 add_subdirectory(15_mem_reference_qualifier)
 add_subdirectory(16_variadic_templates)
-add_subdirectory(17_invoke)
+# add_subdirectory(17_invoke)
