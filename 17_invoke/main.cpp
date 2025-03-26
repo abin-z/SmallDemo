@@ -1,9 +1,10 @@
-#include <iostream>
-#include <utility>
+#include <fmt/core.h>
+
 #include <functional>
+#include <iostream>
 #include <string>
 #include <type_traits>
-#include <fmt/core.h>
+#include <utility>
 
 /// @brief 适用于 普通函数、Lambda、仿函数调用 (C++17后有std::invoke很方便)
 /// @tparam Callable 可调用对象类型
@@ -12,8 +13,7 @@
 /// @param ...args 函数参数包
 /// @return 自动类型推导
 template <typename Callable, typename... Args>
-auto invoke(Callable &&func, Args &&...args)
-    -> decltype(std::forward<Callable>(func)(std::forward<Args>(args)...))
+auto invoke(Callable &&func, Args &&...args) -> decltype(std::forward<Callable>(func)(std::forward<Args>(args)...))
 {
   return std::forward<Callable>(func)(std::forward<Args>(args)...);
 }
@@ -28,16 +28,14 @@ auto invoke(Callable &&func, Args &&...args)
 /// @param ...args 成员函数参数包
 /// @return 自动推导类型
 template <typename R, typename C, typename T, typename... Args>
-auto invoke(R (C::*func)(Args...), T &&obj, Args &&...args)
-    -> decltype((std::forward<T>(obj).*func)(std::forward<Args>(args)...))
+auto invoke(R (C::*func)(Args...), T &&obj, Args &&...args) -> decltype((std::forward<T>(obj).*func)(std::forward<Args>(args)...))
 {
   return (std::forward<T>(obj).*func)(std::forward<Args>(args)...);
 }
 
 // 此函数在上述函数中添加了 const, 可以调用const 成员函数指针
 template <typename R, typename C, typename T, typename... Args>
-auto invoke(R (C::*func)(Args...) const, T &&obj, Args &&...args)
-    -> decltype((std::forward<T>(obj).*func)(std::forward<Args>(args)...))
+auto invoke(R (C::*func)(Args...) const, T &&obj, Args &&...args) -> decltype((std::forward<T>(obj).*func)(std::forward<Args>(args)...))
 {
   return (std::forward<T>(obj).*func)(std::forward<Args>(args)...);
 }
@@ -71,7 +69,7 @@ T getSum(T val)
 }
 
 template <typename T, typename... Args>
-auto getSum(T first, Args... args) -> typename std::common_type<T, Args...>::type // 这里使用decltype(first + getSum(args...))在Linux下不可行
+auto getSum(T first, Args... args) -> typename std::common_type<T, Args...>::type  // 这里使用decltype(first + getSum(args...))在Linux下不可行
 {
   return first + getSum(args...);
 }
@@ -122,15 +120,14 @@ int main()
   int ret4 = f_wrapper(3.14, 20, 30, 60);
 
   // 方式4: 使用lambda, 需要c++17支持
-  auto wrapper = [](auto... args)
-  { return getSum(args...); };
+  auto wrapper = [](auto... args) { return getSum(args...); };
   int ret5 = invoke(wrapper, 3.14, 20, 30, 60);
 
   Test tst;
-  invoke(&Test::sayHello, tst);           // 调用成员函数
-  int val = invoke(&Test::getValue, tst); // 调用const成员函数
+  invoke(&Test::sayHello, tst);            // 调用成员函数
+  int val = invoke(&Test::getValue, tst);  // 调用const成员函数
   std::cout << "invoke(&Test::getValue, tst) ret = " << val << std::endl;
-  invoke(&Test::print, tst, "variadic template nice!"); // 注: 在c++11标准下还有问题, 但是在c++17下就没问题
+  invoke(&Test::print, tst, "variadic template nice!");  // 注: 在c++11标准下还有问题, 但是在c++17下就没问题
 
   // 在c++17中有std::invoke, 很方便
   std::invoke(&Test::print, tst, "std::invoke nice!");

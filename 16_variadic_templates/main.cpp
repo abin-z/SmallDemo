@@ -1,6 +1,6 @@
 #include <iostream>
-#include <vector>
 #include <tuple>
+#include <vector>
 
 /**
  * 可变参数模板(variadic template)为一个接受可变数目参数的模板函数或模板类。
@@ -10,7 +10,6 @@
  * 用省略号指出一个模板参数或函数参数表示一个包。
  */
 
-
 /// @brief
 /// @tparam ...Args 类型参数包，可以接收 0 个或多个类型
 /// @param ...args  函数参数包，用于存储实际传入的参数
@@ -18,7 +17,7 @@
 template <typename... Args>
 size_t getsize(Args... args)
 {
-  return sizeof...(args); // 获取参数包的个数, 和 sizeof 没有关系
+  return sizeof...(args);  // 获取参数包的个数, 和 sizeof 没有关系
 }
 
 template <typename... Args>
@@ -45,11 +44,9 @@ void print(const T &value)
 template <typename T, typename... Args>
 void print(const T &value, Args... args)
 {
-  std::cout << "[" << getsize(args...) << "]" << value << ", "; // 处理当前参数
-  print(args...);                                               // 递归调用，处理剩余参数
+  std::cout << "[" << getsize(args...) << "]" << value << ", ";  // 处理当前参数
+  print(args...);                                                // 递归调用，处理剩余参数
 }
-
-
 
 // 终止递归的基函数(方式3)
 template <typename T>
@@ -63,7 +60,7 @@ template <typename T, typename... Args>
 void print0(T &&val, Args &&...args)
 {
   std::cout << val << " ";
-  print0(std::forward<Args>(args)...); // 完美转发,递归展开剩余参数
+  print0(std::forward<Args>(args)...);  // 完美转发,递归展开剩余参数
 }
 
 /**************************** 使用非递归展开参数包 ********************************/
@@ -71,13 +68,13 @@ void print0(T &&val, Args &&...args)
 template <typename... Args>
 void print4(Args... args)
 {
-  (std::cout << ... << args) << std::endl; // C++17的折叠表达式
+  (std::cout << ... << args) << std::endl;  // C++17的折叠表达式
 }
 
 template <typename... Args>
 void print5(Args... args)
 {
-  ((std::cout << args << " "), ...); // C++17的折叠表达式
+  ((std::cout << args << " "), ...);  // C++17的折叠表达式
   std::cout << std::endl;
 }
 #endif
@@ -92,15 +89,14 @@ void func(const T &value)
 template <typename... Args>
 void print1(Args... args)
 {
-  (void)std::initializer_list<int>{(func(args), 0)...}; // 利用 std::initializer_list ，即初始化列表展开可变参数
+  (void)std::initializer_list<int>{(func(args), 0)...};  // 利用 std::initializer_list ，即初始化列表展开可变参数
   std::cout << std::endl;
 }
 
 template <typename... Args>
 void print2(Args... args)
 {
-  (void)std::initializer_list<char>{([&]
-                                     { std::cout << args << " "; }(), '\0')...}; // std::initializer_list + lambda表达式
+  (void)std::initializer_list<char>{([&] { std::cout << args << " "; }(), '\0')...};  // std::initializer_list + lambda表达式
   std::cout << std::endl;
 }
 
@@ -115,7 +111,7 @@ void print2(Args... args)
 template <typename... Args>
 void print3(Args... args)
 {
-  (void)std::initializer_list<char>{(std::cout << args << " ", '\0')...}; // 使用 std::initializer_list + 逗号运算符
+  (void)std::initializer_list<char>{(std::cout << args << " ", '\0')...};  // 使用 std::initializer_list + 逗号运算符
   std::cout << std::endl;
 }
 

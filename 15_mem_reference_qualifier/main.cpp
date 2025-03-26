@@ -1,4 +1,5 @@
 #include <fmt/core.h>
+
 #include <type_traits>
 
 /**
@@ -9,7 +10,7 @@
 
 class Object
 {
-public:
+ public:
   void func()
   {
     fmt::println("Calling func()");
@@ -33,18 +34,18 @@ public:
   }
 
   // 只能作用于常量左值对象
-  void func02() const &
+  void func02() const&
   {
     fmt::println("Calling func() const& on const lvalue: {}", num);
   }
 
   // 只能作用于常量右值对象
-  void func02() const &&
+  void func02() const&&
   {
     fmt::println("Calling func() const&& on const rvalue: {}", num);
   }
 
-private:
+ private:
   int num = 0;
 };
 
@@ -67,14 +68,9 @@ struct Number
   template <typename T>
   operator T() const
   {
-    static_assert(
-        std::is_same<T, int>::value ||
-            std::is_same<T, double>::value ||
-            std::is_same<T, float>::value ||
-            std::is_same<T, long>::value ||
-            std::is_same<T, long long>::value ||
-            std::is_same<T, long double>::value,
-        "Only int, double, float, long, long long, long double, are allowed for conversion.");
+    static_assert(std::is_same<T, int>::value || std::is_same<T, double>::value || std::is_same<T, float>::value || std::is_same<T, long>::value ||
+                      std::is_same<T, long long>::value || std::is_same<T, long double>::value,
+                  "Only int, double, float, long, long long, long double, are allowed for conversion.");
     return static_cast<T>(data);
   }
 
@@ -98,14 +94,14 @@ Number::operator short() const
 
 class Printer
 {
-public:
+ public:
   // 成员函数模板
   template <typename T>
   void print(T value)
   {
     fmt::println("Generic print: {}", value);
   }
-#ifdef _MSC_VER // MSVC 编译器代码
+#ifdef _MSC_VER  // MSVC 编译器代码
   // 模版函数特化 - 建议在外部特化, 内部支持的编译器较少, 不标准的做法
   template <>
   void print<double>(double value)
@@ -136,22 +132,22 @@ void Printer::print<int>(int value)
 int main()
 {
   fmt::println("========== member reference qualifier ==========");
-  Object obj;        // 左值对象
-  const Object cobj; // const 左值对象
+  Object obj;         // 左值对象
+  const Object cobj;  // const 左值对象
   obj.func();
   cobj.func();
 
   obj.func02();
   cobj.func02();
 
-  Object{}.func02();                            // 右值对象
-  static_cast<const Object>(Object{}).func02(); // const 右值对象
-  getCObj().func02();                           // 右值对象
+  Object{}.func02();                             // 右值对象
+  static_cast<const Object>(Object{}).func02();  // const 右值对象
+  getCObj().func02();                            // 右值对象
 
   fmt::println("========== type conversion operators ==========");
   Number num;
   num.data = 99;
-  int n = num; // 隐式转换
+  int n = num;  // 隐式转换
   double d = num;
   long double ld = num;
   long long ll = num;
