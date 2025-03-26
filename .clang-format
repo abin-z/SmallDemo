@@ -13,3 +13,14 @@ BraceWrapping:
   AfterControlStatement: true  # ✅ if/for/while 换行
   BeforeElse: true       # ✅  else 换行
   IndentBraces: false    # ❌ 大括号不额外缩进
+
+
+##############################################################
+# 如果你对某段代码的格式 非常满意，不希望 clang-format 修改它。
+# 请使用 clang-format off/on 忽略代码块的功能
+#
+# // clang-format off
+# 满意的代码片段, 不需要clang-format 修改它。
+# // clang-format on
+#
+##############################################################
