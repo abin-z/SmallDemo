@@ -21,6 +21,7 @@ int max = 10;
  *    while (!pred()) {
  *     wait(lock);
  *    }
+ * 这确保了即使有多个线程同时 wait，只有真正满足 pred() 的线程才会继续执行。
  */
 
 size_t tid()
