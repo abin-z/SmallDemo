@@ -68,9 +68,15 @@ struct Number
   template <typename T>
   operator T() const
   {
-    static_assert(std::is_same<T, int>::value || std::is_same<T, double>::value || std::is_same<T, float>::value || std::is_same<T, long>::value ||
-                      std::is_same<T, long long>::value || std::is_same<T, long double>::value,
+    // clang-format off
+    static_assert(std::is_same<T, int>::value || 
+                    std::is_same<T, double>::value || 
+                    std::is_same<T, float>::value ||
+                    std::is_same<T, long>::value || 
+                    std::is_same<T, long long>::value || 
+                    std::is_same<T, long double>::value,
                   "Only int, double, float, long, long long, long double, are allowed for conversion.");
+    // clang-format on
     return static_cast<T>(data);
   }
 

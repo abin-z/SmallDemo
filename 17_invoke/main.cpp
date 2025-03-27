@@ -35,7 +35,8 @@ auto invoke(R (C::*func)(Args...), T &&obj, Args &&...args) -> decltype((std::fo
 
 // 此函数在上述函数中添加了 const, 可以调用const 成员函数指针
 template <typename R, typename C, typename T, typename... Args>
-auto invoke(R (C::*func)(Args...) const, T &&obj, Args &&...args) -> decltype((std::forward<T>(obj).*func)(std::forward<Args>(args)...))
+auto invoke(R (C::*func)(Args...) const, T &&obj, Args &&...args)
+  -> decltype((std::forward<T>(obj).*func)(std::forward<Args>(args)...))
 {
   return (std::forward<T>(obj).*func)(std::forward<Args>(args)...);
 }
@@ -69,7 +70,8 @@ T getSum(T val)
 }
 
 template <typename T, typename... Args>
-auto getSum(T first, Args... args) -> typename std::common_type<T, Args...>::type  // 这里使用decltype(first + getSum(args...))在Linux下不可行
+auto getSum(T first, Args... args) ->
+  typename std::common_type<T, Args...>::type  // 这里使用decltype(first + getSum(args...))在Linux下不可行
 {
   return first + getSum(args...);
 }
