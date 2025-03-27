@@ -1,25 +1,27 @@
-#include <thread>
-#include <mutex>
-#include <condition_variable>
-#include <queue>
-#include <utility>
-#include <atomic>
-#include <limits>
-
 #include <fmt/core.h>
 
-std::mutex mtx;             // 互斥量
-std::condition_variable cv; // 条件变量
+#include <atomic>
+#include <condition_variable>
+#include <limits>
+#include <mutex>
+#include <queue>
+#include <thread>
+#include <utility>
 
-std::deque<int> dataQueue; // 共享消费队列
-bool isFinished = false;   // 是否全部生产完成, 可以使用std::atomic<bool>
+std::mutex mtx;              // 互斥量
+std::condition_variable cv;  // 条件变量
+
+std::deque<int> dataQueue;  // 共享消费队列
+bool isFinished = false;    // 是否全部生产完成, 可以使用std::atomic<bool>
 
 /// @brief 获取线程id
 /// @return
 size_t tid()
 {
-  // thread_local 关键字修饰的变量具有线程（thread）周期，这些变量在线程开始的时候被生成，在线程结束的时候被销毁，并且每一个线程都拥有一个独立的变量实例
-  static thread_local size_t tid = std::hash<std::thread::id>{}(std::this_thread::get_id()) % std::numeric_limits<uint16_t>::max();
+  // thread_local
+  // 关键字修饰的变量具有线程（thread）周期，这些变量在线程开始的时候被生成，在线程结束的时候被销毁，并且每一个线程都拥有一个独立的变量实例
+  static thread_local size_t tid =
+    std::hash<std::thread::id>{}(std::this_thread::get_id()) % std::numeric_limits<uint16_t>::max();
   return tid;
 }
 
@@ -51,8 +53,7 @@ void consumer()
   while (true)
   {
     std::unique_lock<std::mutex> locker(mtx);
-    cv.wait(locker, []
-            { return !dataQueue.empty() || isFinished; }); // 等待条件满足
+    cv.wait(locker, [] { return !dataQueue.empty() || isFinished; });  // 等待条件满足
     // // 消费方式1 ------------------------start
     // while (!dataQueue.empty())
     // {
