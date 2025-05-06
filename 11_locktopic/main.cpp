@@ -6,6 +6,7 @@
 #include <chrono>
 #include <fmt/core.h>
 #include <fmt/ranges.h>
+#include <sstream>
 
 /*
  * C++ 锁机制专题
@@ -19,14 +20,20 @@
  *   固定锁的顺序：让多个线程按照固定顺序来获取多个锁。
  *   避免长时间持有锁：避免长时间持有锁的操作，缩小锁的作用范围。
  *   使用 std::lock：std::lock 可以同时锁定多个互斥量，避免死锁。
- *
+ * 
  *   std::lock 用于同时锁定多个互斥量。它会尝试以相同的顺序获取所有互斥量。如果某个互斥量已经被锁定，它会阻塞直到所有锁都成功获取
  *   std::lock 本身不会管理锁的生命周期，它只是确保多个互斥量不会发生死锁。
  *   你仍然需要使用 std::lock_guard 或其他 RAII 风格的锁来自动释放锁，否则锁会保持在任务完成后仍然处于锁定状态，这会导致其他线程无法获取这些锁，从而发生死锁。
  *   std::lock(mtx1, mtx2, ...);  // 尝试同时锁定 mtx1 和 mtx2
  *   std::lock_guard<std::mutex> lock1(mtx1, std::adopt_lock);  // 使用 adopt_lock 告诉 lock_guard 不要再尝试锁定 mtx1
  *   std::lock_guard<std::mutex> lock2(mtx2, std::adopt_lock);  // 使用 adopt_lock 告诉 lock_guard 不要再尝试锁定 mtx2
- *   ...
+ *   
+ *   范围锁 (std::scoped_lock) 是 C++17 引入的一个轻量级 RAII 锁管理类，它的主要特点是可以同时锁多个互斥量并防止死锁，适用于简单且高效的场景。
+ *   - 构造时自动加锁;
+ *   - 析构时自动解锁;
+ *   - 支持多个互斥量一次性加锁，内部自动使用 std::lock 避免死锁;
+ *   - 不支持手动解锁或重新加锁(与 lock_guard 类似);
+ *   - 与 std::unique_lock 相比更轻量，但功能更少。
  */
 
 /// @brief 获取线程id的hash
@@ -143,6 +150,32 @@ void testVoidDeadlock()
 }
 
 /// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+/// @brief 防范死锁
+std::mutex m1, m2;
+void mytask()
+{
+  // std::scoped_lock<std::mutex, std::mutex> lock(m1, m2);  // C++17 有了类型模板推导, 可以不写类型模版
+  std::scoped_lock lock(m1, m2);  // 需要C++17, RAII管理锁, 也不会出现死锁
+  std::ostringstream oos;
+  oos << std::this_thread::get_id();
+  fmt::print("thread id {} running!\n", oos.str());
+}
+
+void testScopedLock()
+{
+  std::thread t1(mytask);
+  std::thread t2(mytask);
+  std::thread t3(mytask);
+  std::thread t4(mytask);
+  std::thread t5(mytask);
+  t1.join();
+  t2.join();
+  t3.join();
+  t4.join();
+  t5.join();
+}
+
+/// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 int main()
 {
   fmt::println("---------------------------------------------------");
@@ -153,5 +186,7 @@ int main()
   testSharedMutex();
   fmt::println("---------------------------------------------------");
   testVoidDeadlock();
+  fmt::println("---------------------------------------------------");
+  testScopedLock();
   fmt::println("---------------------------------------------------");
 }
