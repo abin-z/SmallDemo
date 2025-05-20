@@ -1,5 +1,5 @@
 BasedOnStyle: Google  # 继承 Google 风格
-ColumnLimit: 130      # 单行最大字符数130
+ColumnLimit: 120      # 单行最大字符数120
 IndentWidth: 2        # 缩进宽度2
 UseTab: Never         # 使用空格缩进
 TabWidth: 2           # Tab 宽度2
@@ -8,7 +8,9 @@ AllowShortFunctionsOnASingleLine: Empty   # 允许短函数一行显示, Empty�
 BreakConstructorInitializers: AfterColon  # 构造函数初始化列表换行
 ConstructorInitializerIndentWidth: 2      # 构造函数初始化列表缩进
 ConstructorInitializerAllOnOneLineOrOnePerLine: true # 构造函数初始化列表一行或者一行一个
-ContinuationIndentWidth: 2  # 换行缩进宽度2
+ContinuationIndentWidth: 2    # 换行缩进宽度2
+IndentCaseLabels: false       # 控制 case: label 本身是否缩进（你没设置，默认为 false）
+# AlignConsecutiveAssignments: true  # 启用连续赋值对齐
 
 BreakBeforeBraces: Custom   # 使用自定义大括号规则
 BraceWrapping:
@@ -19,6 +21,7 @@ BraceWrapping:
   AfterEnum: true        # ✅ 枚举的大括号换行
   AfterControlStatement: true  # ✅ if/for/while 换行
   BeforeElse: true       # ✅  else 换行
+  BeforeCatch: true      # ✅  catch 大括号也换行
   IndentBraces: false    # ❌ 大括号不额外缩进
 
 ##############################################################
