@@ -22,12 +22,12 @@ public:
   static void operator delete(void *ptr, void *place) noexcept;
 };
 
-Person::Person(int age) : id_(age)
+inline Person::Person(int age) : id_(age)
 {
   fmt::println("person constructor called.");
 }
 
-Person::~Person()
+inline Person::~Person()
 {
   fmt::println("person destructor called.");
 }
