@@ -101,6 +101,7 @@ int main()
     fmt::println("objArray[{}] address = {:p}", i, static_cast<void *>(&objArray[i]));
     objArray[i].~Object();  // Manually call destructor for each object
   }
+  
   operator delete[](arrayPtr);  // Calls global operator delete for arrays
   fmt::println("==================================================");
   // Placement new for arrays
