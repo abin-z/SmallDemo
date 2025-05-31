@@ -84,5 +84,25 @@ int main()
   operator delete(ptr);  // Calls global operator delete
   fmt::println("==================================================");
 
+  constexpr int count = 4;
+  void *arrayPtr = operator new[](sizeof(Object) * count);  // Calls global operator new for arrays
+  Object *objArray = new (arrayPtr) Object[count];          // Calls Object's placement new for arrays
+
+  // // 显式逐个构造对象
+  // Object *objArray = static_cast<Object *>(arrayPtr);
+  // for (int i = 0; i < count; ++i)
+  // {
+  //    new (&objArray[i]) Object(); // 这就不会触发数组版 placement new 的隐藏行为
+  // }
+
+  fmt::println("objArray address = {:p}", static_cast<void *>(objArray));
+  for (int i = 0; i < count; ++i)
+  {
+    fmt::println("objArray[{}] address = {:p}", i, static_cast<void *>(&objArray[i]));
+    objArray[i].~Object();  // Manually call destructor for each object
+  }
+  operator delete[](arrayPtr);  // Calls global operator delete for arrays
+  fmt::println("==================================================");
+
   return 0;
 }
