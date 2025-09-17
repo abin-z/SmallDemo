@@ -1,6 +1,5 @@
 #include <iostream>
 #include <tuple>
-#include <vector>
 
 /**
  * 可变参数模板(variadic template)为一个接受可变数目参数的模板函数或模板类。
