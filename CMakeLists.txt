@@ -11,6 +11,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # 强制要求支持指定的 C++ 标准
 set(CMAKE_CXX_EXTENSIONS OFF)       # 禁用编译器特定扩展，确保代码更具可移植性
 
+# 设置所有库生成位置无关代码 (Position Independent Code) 对应GCC/Clang的-fPIC
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # 定义项目名称及支持的语言
 project(SmallDemo LANGUAGES C CXX)
 
