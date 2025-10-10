@@ -17,6 +17,9 @@
   # 设置 CMake 的最低版本要求
   cmake_minimum_required(VERSION 3.20)
   
+  # 生成 compile_commands.json 文件（用于 clangd、clang-tidy 等工具）
+  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
   # 如果没有指定构建类型，默认设置为 Release
   if (NOT CMAKE_BUILD_TYPE)
       set(CMAKE_BUILD_TYPE Release)
