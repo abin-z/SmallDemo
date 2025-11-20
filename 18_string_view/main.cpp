@@ -1,4 +1,5 @@
 #include <array>
+#include <cstdint>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -117,9 +118,25 @@ void demo_string_string_view()
   // fmt::print("bad = {}  (悬挂引用，不能这样写！)\n", bad);
 }
 
+// 去掉前后空白字符（空格、制表符、换行等）
+std::string_view trim(std::string_view sv)
+{
+  // 去掉前导空白
+  size_t start = 0;
+  while (start < sv.size() && std::isspace(static_cast<uint8_t>(sv[start])))
+  {
+    ++start;
+  }
 
+  // 去掉尾部空白
+  size_t end = sv.size();
+  while (end > start && std::isspace(static_cast<uint8_t>(sv[end - 1])))
+  {
+    --end;
+  }
 
-
+  return sv.substr(start, end - start);
+}
 
 int main()
 {
