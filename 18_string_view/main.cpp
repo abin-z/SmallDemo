@@ -145,6 +145,26 @@ inline std::string_view trim(std::string_view sv)
   return sv.substr(start, end - start);
 }
 
+void test_trim()
+{
+  std::string_view s1 = "   hello world   ";
+  std::string_view s2 = "\t\n   trimmed string \r\n  ";
+  std::string_view s3 = "  \t   \n  ";  // 全空白
+
+  fmt::print("original1: '{}'\n", s1);
+  fmt::print("trim_left1 : '{}'\n", trim_left(s1));
+  fmt::print("trim_right1: '{}'\n", trim_right(s1));
+  fmt::print("trim1      : '{}'\n\n", trim(s1));
+
+  fmt::print("original2: '{}'\n", s2);
+  fmt::print("trim_left2 : '{}'\n", trim_left(s2));
+  fmt::print("trim_right2: '{}'\n", trim_right(s2));
+  fmt::print("trim2      : '{}'\n\n", trim(s2));
+
+  fmt::print("original3: '{}'\n", s3);
+  fmt::print("trim3      : '{}'\n", trim(s3));  // 返回空视图
+}
+
 int main()
 {
   std::string str{"Hello, World!"};
@@ -153,5 +173,6 @@ int main()
   fmt::print("String View: {}\n", str_view);
   examples();
   demo_string_string_view();
+  test_trim();
   return 0;
 }
