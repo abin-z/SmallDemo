@@ -42,32 +42,40 @@ void examples()
 {
   // 1. 从 const char* 构造（字符串字面量）
   std::string_view sv1 = "hello";  // OK，指向静态存储区
+  fmt::print("sv1 = {}\n", sv1);
 
   // 2. 从 std::string 构造
   std::string s = "world";
   std::string_view sv2 = s;  // OK，引用 s 的数据，不拷贝
+  fmt::print("sv2 = {}\n", sv2);
 
   // 3. 从 char* + 长度构造
   const char* p = "abcdefg";
   std::string_view sv3(p, 3);  // sv3 = "abc"
+  fmt::print("sv3 = {}\n", sv3);
 
   // 4. 从 string 的子串构造
   std::string_view sv4(s.data() + 1, 3);  // 指向 "orl"
+  fmt::print("sv4 = {}\n", sv4);
 
   // 5. 使用 substr() 构造子视图（零拷贝）
   std::string_view sv5 = sv2.substr(1, 3);  // "orl"
+  fmt::print("sv5 = {}\n", sv5);
 
   // 6. 指向非 '\0' 结尾的字符缓冲区
   const char buf[] = {'A', 'B', 'C', 'D', 'E'};
   std::string_view sv6(buf, 5);  // "ABCDE"，无 '\0'，二进制安全
+  fmt::print("sv6 = {}\n", sv6);
 
   // 7. 从 vector<char> 构造
   std::vector<char> v = {'x', 'y', 'z'};
   std::string_view sv7(v.data(), v.size());  // "xyz"
+  fmt::print("sv7 = {}\n", sv7);
 
   // 8. 从 std::array<char> 构造
   std::array<char, 5> arr = {'h', 'e', 'l', 'l', 'o'};
   std::string_view sv8(arr.data(), arr.size());  // "hello"
+  fmt::print("sv8 = {}\n", sv8);
 
   // ---⚠️ 错误示例（会悬垂）---
   // std::string_view bad = std::string("tmp"); // 错误: 临时对象已销毁
@@ -79,5 +87,6 @@ int main()
   std::string_view str_view{str};
   fmt::print("String: {}\n", str);
   fmt::print("String View: {}\n", str_view);
+  examples();
   return 0;
 }
