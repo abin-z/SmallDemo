@@ -81,6 +81,43 @@ void examples()
   // std::string_view bad = std::string("tmp"); // 错误: 临时对象已销毁
 }
 
+void demo_string_string_view() {
+    fmt::print("=== string → string_view ===\n");
+
+    // 1. 从 std::string 转换（零拷贝）
+    std::string s = "hello world";
+    std::string_view sv1 = s;
+    fmt::print("sv1 = {}\n", sv1);
+
+    // 2. 从字符指针转 string_view
+    const char* p = "abcdef";
+    std::string_view sv2(p, 3);  // 只取前 3 个
+    fmt::print("sv2 = {}\n", sv2);
+
+
+    fmt::print("\n=== string_view → string ===\n");
+
+    // 3. string_view → string（需要拷贝）
+    std::string s2 = std::string(sv1);
+    fmt::print("s2 = {}\n", s2);
+
+    // 4. 从部分区域构造 string
+    std::string_view sv3 = "123456789";
+    std::string s3(sv3.substr(2, 4));  // "3456"
+    fmt::print("s3 = {}\n", s3);
+
+    // 5. 使用 data()+size() 转换
+    std::string s4(sv2.data(), sv2.size());
+    fmt::print("s4 = {}\n", s4);
+
+    // fmt::print("\n=== 易错示例：悬挂引用 ===\n");
+    // 6. 错误示范：千万不要这样用！
+    // std::string_view bad = std::string("temp"); 
+    // 临时 string 马上销毁，bad 内部指针失效
+    // fmt::print("bad = {}  (悬挂引用，不能这样写！)\n", bad);
+}
+
+
 int main()
 {
   std::string str{"Hello, World!"};
@@ -88,5 +125,6 @@ int main()
   fmt::print("String: {}\n", str);
   fmt::print("String View: {}\n", str_view);
   examples();
+  demo_string_string_view();
   return 0;
 }
