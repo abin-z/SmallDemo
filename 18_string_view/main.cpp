@@ -1,4 +1,5 @@
 #include <array>
+#include <cctype>
 #include <cstdint>
 #include <string>
 #include <string_view>
@@ -118,22 +119,28 @@ void demo_string_string_view()
   // fmt::print("bad = {}  (悬挂引用，不能这样写！)\n", bad);
 }
 
-// 去掉前后空白字符（空格、制表符、换行等）
-std::string_view trim(std::string_view sv)
+inline std::string_view trim_left(std::string_view sv)
 {
-  // 去掉前导空白
   size_t start = 0;
-  while (start < sv.size() && std::isspace(static_cast<uint8_t>(sv[start])))
-  {
-    ++start;
-  }
+  while (start < sv.size() && std::isspace(static_cast<unsigned char>(sv[start]))) ++start;
+  return sv.substr(start);
+}
 
-  // 去掉尾部空白
+inline std::string_view trim_right(std::string_view sv)
+{
   size_t end = sv.size();
-  while (end > start && std::isspace(static_cast<uint8_t>(sv[end - 1])))
-  {
-    --end;
-  }
+  while (end > 0 && std::isspace(static_cast<unsigned char>(sv[end - 1]))) --end;
+  return sv.substr(0, end);
+}
+
+// 去掉前后空白字符（空格、制表符、换行等）
+inline std::string_view trim(std::string_view sv)
+{
+  size_t start = 0;
+  size_t end = sv.size();
+
+  while (start < end && std::isspace(static_cast<unsigned char>(sv[start]))) ++start;
+  while (end > start && std::isspace(static_cast<unsigned char>(sv[end - 1]))) --end;
 
   return sv.substr(start, end - start);
 }
