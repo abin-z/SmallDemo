@@ -145,6 +145,30 @@ inline std::string_view trim(std::string_view sv)
   return sv.substr(start, end - start);
 }
 
+// 去掉前导空白
+inline std::string_view trim_left2(std::string_view sv)
+{
+  const std::string_view ws = " \t\n\r\f\v";  // 空白字符集合
+  size_t start = sv.find_first_not_of(ws);
+  if (start == std::string_view::npos) return {};  // 全是空白
+  return sv.substr(start);
+}
+
+// 去掉尾部空白
+inline std::string_view trim_right2(std::string_view sv)
+{
+  const std::string_view ws = " \t\n\r\f\v";  // 空白字符集合
+  size_t end = sv.find_last_not_of(ws);
+  if (end == std::string_view::npos) return {};  // 全是空白
+  return sv.substr(0, end + 1);
+}
+
+// 去掉前后空白
+inline std::string_view trim2(std::string_view sv)
+{
+  return trim_right2(trim_left2(sv));
+}
+
 void test_trim()
 {
   std::string_view s1 = "   hello world   ";
