@@ -28,7 +28,8 @@ auto invoke(Callable &&func, Args &&...args) -> decltype(std::forward<Callable>(
 /// @param ...args 成员函数参数包
 /// @return 自动推导类型
 template <typename R, typename C, typename T, typename... Args>
-auto invoke(R (C::*func)(Args...), T &&obj, Args &&...args) -> decltype((std::forward<T>(obj).*func)(std::forward<Args>(args)...))
+auto invoke(R (C::*func)(Args...), T &&obj, Args &&...args)
+  -> decltype((std::forward<T>(obj).*func)(std::forward<Args>(args)...))
 {
   return (std::forward<T>(obj).*func)(std::forward<Args>(args)...);
 }
