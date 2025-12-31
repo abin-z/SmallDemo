@@ -4,9 +4,9 @@ cmake_minimum_required(VERSION 3.20)
 # 生成 compile_commands.json 文件（用于 clangd、clang-tidy 等工具）
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# 如果没有指定构建类型，默认设置为 Release
-if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
+# 设置默认构建类型为Release，如果未指定构建类型
+if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
 endif()
 
 # 设置 C++ 标准为 C++17，并强制要求支持 C++17
