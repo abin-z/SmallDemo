@@ -1,5 +1,7 @@
+#include <basetsd.h>
 #include <fmt/core.h>
 
+#include <cstdint>
 #include <type_traits>
 
 /**
@@ -34,13 +36,13 @@ class Object
   }
 
   // 只能作用于常量左值对象
-  void func02() const&
+  void func02() const &
   {
     fmt::println("Calling func() const& on const lvalue: {}", num);
   }
 
   // 只能作用于常量右值对象
-  void func02() const&&
+  void func02() const &&
   {
     fmt::println("Calling func() const&& on const rvalue: {}", num);
   }
@@ -69,12 +71,12 @@ struct Number
   operator T() const
   {
     // clang-format off
-    static_assert(std::is_same<T, int>::value || 
-                    std::is_same<T, double>::value || 
-                    std::is_same<T, float>::value ||
-                    std::is_same<T, long>::value || 
-                    std::is_same<T, long long>::value || 
-                    std::is_same<T, long double>::value,
+    static_assert(std::is_same_v<T, int> || 
+                    std::is_same_v<T, double> || 
+                    std::is_same_v<T, float> ||
+                    std::is_same_v<T, int16_t> || 
+                    std::is_same_v<T, int64_t> || 
+                    std::is_same_v<T, long double>,
                   "Only int, double, float, long, long long, long double, are allowed for conversion.");
     // clang-format on
     return static_cast<T>(data);
@@ -93,9 +95,9 @@ C++ 规定模板的显式特化应该在 命名空间作用域 中进行，而�
 
 // 普通类的成员模版函数全特化-只能在类外特化
 template <>
-Number::operator short() const
+Number::operator int16_t() const
 {
-  return static_cast<short>(data);
+  return static_cast<int16_t>(data);
 }
 
 class Printer
@@ -116,13 +118,13 @@ class Printer
   }
   // 模版函数特化
   template <>
-  void print(long long value)
+  void print(int64_t value)
   {
     fmt::println("Specialized print for long long: {}", value);
   }
 #endif
   // 函数重载, 优先级高于特化版本
-  void print(long value)
+  void print(int32_t value)
   {
     fmt::println("print for long : {}", value);
   }
@@ -156,9 +158,9 @@ int main()
   int n = num;  // 隐式转换
   double d = num;
   long double ld = num;
-  long long ll = num;
+  int64_t ll = num;
   char c = num;
-  short s = num;
+  int16_t s = num;
   fmt::println("short s = {}", s);
 
   fmt::println("========== template full specialization ==========");
@@ -166,7 +168,7 @@ int main()
   printer.print(1);
   printer.print(3.14);
   printer.print("hello");
-  printer.print(999999999ll);
-  printer.print(999999l);
+  printer.print(999999999LL);
+  printer.print(999999L);
   return 0;
 }
