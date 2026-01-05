@@ -66,7 +66,7 @@ void print0(T &&val, Args &&...args)
 /**************************** 使用非递归展开参数包 ********************************/
 #if __cplusplus >= 201703L
 template <typename... Args>
-void print4(Args... args)
+void print4(Args... args)  // 值传递
 {
   (std::cout << ... << args) << '\n';  // C++17的折叠表达式
 }
@@ -77,6 +77,22 @@ void print5(Args... args)
   ((std::cout << args << " "), ...);  // C++17的折叠表达式
   std::cout << '\n';
 }
+
+template <typename... Args>
+void print6(Args &&...args)
+{
+  (std::cout << ... << std::forward<Args>(args)) << '\n';  // 完美转发的折叠表达式
+}
+
+// 首元素特化
+template <typename First, typename... Rest>
+void print7(First &&first, Rest &&...rest)
+{
+  std::cout << std::forward<First>(first);
+  ((std::cout << ' ' << std::forward<Rest>(rest)), ...);
+  std::cout << '\n';
+}
+
 #endif
 
 // 普通的模板函数
@@ -134,6 +150,8 @@ int main()
 #if __cplusplus >= 201703L
   print4(true, false, 3.14, 200, 'c', "string");
   print5(true, false, 3.14, 200, 'c', "string");
+  print6(true, false, 3.14, 200, 'c', "string");
+  print7(true, false, 3.14, 200, 'c', "string");
 #endif
   print0(true, false, 3.14, 200, 'c', "string");
 
