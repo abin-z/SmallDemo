@@ -1,6 +1,5 @@
 #include <array>
 #include <cctype>
-#include <cstdint>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -37,9 +36,6 @@
  *   - 子串操作无需分配新的 std::string
  */
 
-#include <string>
-#include <string_view>
-
 void examples()
 {
   // 1. 从 const char* 构造（字符串字面量）
@@ -52,7 +48,7 @@ void examples()
   fmt::print("sv2 = {}\n", sv2);
 
   // 3. 从 char* + 长度构造
-  const char* p = "abcdefg";
+  const char *p = "abcdefg";
   std::string_view sv3(p, 3);  // sv3 = "abc"
   fmt::print("sv3 = {}\n", sv3);
 
@@ -93,7 +89,7 @@ void demo_string_string_view()
   fmt::print("sv1 = {}\n", sv1);
 
   // 2. 从字符指针转 string_view
-  const char* p = "abcdef";
+  const char *p = "abcdef";
   std::string_view sv2(p, 3);  // 只取前 3 个
   fmt::print("sv2 = {}\n", sv2);
 
@@ -122,14 +118,14 @@ void demo_string_string_view()
 inline std::string_view trim_left(std::string_view sv)
 {
   size_t start = 0;
-  while (start < sv.size() && std::isspace(static_cast<unsigned char>(sv[start]))) ++start;
+  while (start < sv.size() && std::isspace(static_cast<unsigned char>(sv[start])) != 0) ++start;
   return sv.substr(start);
 }
 
 inline std::string_view trim_right(std::string_view sv)
 {
   size_t end = sv.size();
-  while (end > 0 && std::isspace(static_cast<unsigned char>(sv[end - 1]))) --end;
+  while (end > 0 && std::isspace(static_cast<unsigned char>(sv[end - 1])) != 0) --end;
   return sv.substr(0, end);
 }
 
@@ -139,8 +135,8 @@ inline std::string_view trim(std::string_view sv)
   size_t start = 0;
   size_t end = sv.size();
 
-  while (start < end && std::isspace(static_cast<unsigned char>(sv[start]))) ++start;
-  while (end > start && std::isspace(static_cast<unsigned char>(sv[end - 1]))) --end;
+  while (start < end && std::isspace(static_cast<unsigned char>(sv[start])) != 0) ++start;
+  while (end > start && std::isspace(static_cast<unsigned char>(sv[end - 1])) != 0) --end;
 
   return sv.substr(start, end - start);
 }
@@ -187,6 +183,16 @@ void test_trim()
 
   fmt::print("original3: '{}'\n", s3);
   fmt::print("trim3      : '{}'\n", trim(s3));  // 返回空视图
+}
+
+void test_perf(std::string s) {}  // performance-unnecessary-value-param
+
+void test_bug()
+{
+  std::string x = "abc";
+  std::string y = std::move(x);
+  // (void)y;
+  x.clear();  // bugprone-use-after-move
 }
 
 int main()
