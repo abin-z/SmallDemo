@@ -57,6 +57,7 @@ struct AA
   {
     fmt::print("AA destroyed\n");
   }
+  AA() = default;
   AA(const AA &) = default;
   AA &operator=(const AA &) = default;
   AA(AA &&) noexcept = default;
