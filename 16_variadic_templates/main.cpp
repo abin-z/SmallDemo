@@ -1,5 +1,6 @@
 #include <iostream>
 #include <tuple>
+#include <utility>
 
 /**
  * 可变参数模板(variadic template)为一个接受可变数目参数的模板函数或模板类。
@@ -29,14 +30,14 @@ std::tuple<Args...> makeTuple(Args... args)
 // 终止递归的基函数(方式1)
 // void print()
 // {
-//   std::cout << std::endl;
+//   std::cout << '\n';
 // }
 
 // 终止递归的基函数(方式2)
 template <typename T>
 void print(const T &value)
 {
-  std::cout << value << std::endl;
+  std::cout << value << '\n';
 }
 
 // 递归展开参数包
@@ -51,14 +52,14 @@ void print(const T &value, Args... args)
 template <typename T>
 void print0(T &&val)
 {
-  std::cout << val << std::endl;
+  std::cout << std::forward<T>(val) << '\n';
 }
 
 // 递归展开参数包, 使用万能引用+完美转发
 template <typename T, typename... Args>
 void print0(T &&val, Args &&...args)
 {
-  std::cout << val << " ";
+  std::cout << std::forward<T>(val) << " ";
   print0(std::forward<Args>(args)...);  // 完美转发,递归展开剩余参数
 }
 
@@ -67,14 +68,14 @@ void print0(T &&val, Args &&...args)
 template <typename... Args>
 void print4(Args... args)
 {
-  (std::cout << ... << args) << std::endl;  // C++17的折叠表达式
+  (std::cout << ... << args) << '\n';  // C++17的折叠表达式
 }
 
 template <typename... Args>
 void print5(Args... args)
 {
   ((std::cout << args << " "), ...);  // C++17的折叠表达式
-  std::cout << std::endl;
+  std::cout << '\n';
 }
 #endif
 
@@ -89,14 +90,15 @@ template <typename... Args>
 void print1(Args... args)
 {
   (void)std::initializer_list<int>{(func(args), 0)...};  // 利用 std::initializer_list ，即初始化列表展开可变参数
-  std::cout << std::endl;
+  std::cout << '\n';
 }
 
 template <typename... Args>
 void print2(Args... args)
 {
-  (void)std::initializer_list<char>{([&] { std::cout << args << " "; }(), '\0')...};  // std::initializer_list + lambda表达式
-  std::cout << std::endl;
+  (void)std::initializer_list<char>{
+    ([&] { std::cout << args << " "; }(), '\0')...};  // std::initializer_list + lambda表达式
+  std::cout << '\n';
 }
 
 /*
@@ -111,19 +113,19 @@ template <typename... Args>
 void print3(Args... args)
 {
   (void)std::initializer_list<char>{(std::cout << args << " ", '\0')...};  // 使用 std::initializer_list + 逗号运算符
-  std::cout << std::endl;
+  std::cout << '\n';
 }
 
 int main()
 {
-  std::cout << "__cplusplus: " << __cplusplus << std::endl;
-  std::cout << "Variadic Template Parameter Pack size = " << getsize() << std::endl;
-  std::cout << "Variadic Template Parameter Pack size = " << getsize(true) << std::endl;
-  std::cout << "Variadic Template Parameter Pack size = " << getsize(true, false) << std::endl;
-  std::cout << "Variadic Template Parameter Pack size = " << getsize(true, false, 3.14) << std::endl;
-  std::cout << "Variadic Template Parameter Pack size = " << getsize(true, false, 3.14, 200) << std::endl;
-  std::cout << "Variadic Template Parameter Pack size = " << getsize(true, false, 3.14, 200, 'c') << std::endl;
-  std::cout << "Variadic Template Parameter Pack size = " << getsize(true, false, 3.14, 200, 'c', "string") << std::endl;
+  std::cout << "__cplusplus: " << __cplusplus << '\n';
+  std::cout << "Variadic Template Parameter Pack size = " << getsize() << '\n';
+  std::cout << "Variadic Template Parameter Pack size = " << getsize(true) << '\n';
+  std::cout << "Variadic Template Parameter Pack size = " << getsize(true, false) << '\n';
+  std::cout << "Variadic Template Parameter Pack size = " << getsize(true, false, 3.14) << '\n';
+  std::cout << "Variadic Template Parameter Pack size = " << getsize(true, false, 3.14, 200) << '\n';
+  std::cout << "Variadic Template Parameter Pack size = " << getsize(true, false, 3.14, 200, 'c') << '\n';
+  std::cout << "Variadic Template Parameter Pack size = " << getsize(true, false, 3.14, 200, 'c', "string") << '\n';
 
   print(true, false, 3.14, 200, 'c', "string");
   print1(true, false, 3.14, 200, 'c', "string");
@@ -136,5 +138,5 @@ int main()
   print0(true, false, 3.14, 200, 'c', "string");
 
   auto t = makeTuple(1, 2.5, "Hello");
-  std::cout << std::get<0>(t) << " " << std::get<1>(t) << " " << std::get<2>(t) << std::endl;
+  std::cout << std::get<0>(t) << " " << std::get<1>(t) << " " << std::get<2>(t) << '\n';
 }
