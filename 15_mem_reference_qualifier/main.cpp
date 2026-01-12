@@ -1,4 +1,3 @@
-#include <basetsd.h>
 #include <fmt/core.h>
 
 #include <cstdint>
