@@ -1,5 +1,6 @@
-#include <iostream>
 #include <fmt/core.h>
+
+#include <iostream>
 
 // 普通函数
 double sum(double x, double y)
@@ -35,6 +36,7 @@ struct Object
 
 void test();
 void test02();
+void libinfo();
 
 /// @brief 主函数，程序的入口点
 /// @param argc 命令行参数的数量
@@ -46,7 +48,26 @@ int main(int argc, char **argv)
   fmt::println("Hello World! I am from fmt library.");
   test();
   test02();
+  libinfo();
+
   return 0;
+}
+
+void libinfo()
+{
+#ifdef _LIBCPP_VERSION
+  std::cout << "C++ Standard Library: libc++  "
+            << "Version: " << _LIBCPP_VERSION << "\n";
+#else
+  std::cout << "C++ Standard Library: Not libc++\n";
+#endif
+
+#ifdef __GLIBCXX__
+  std::cout << "C++ Standard Library: libstdc++  "
+            << "Version: " << __GLIBCXX__ << "\n";
+#else
+  std::cout << "C++ Standard Library: Not libstdc++\n";
+#endif
 }
 
 void test()
@@ -69,7 +90,7 @@ void test02()
 {
   // 类的静态成员函数和普通函数类似
   using fun_t = void (*)(int);
-  fun_t funcptr = &Object::printNum; // 静态成员函数, 可以直接调用
+  fun_t funcptr = &Object::printNum;  // 静态成员函数, 可以直接调用
   funcptr(333);
 
   Object obj;
@@ -89,7 +110,7 @@ void test02()
   // 定义具体的指针
   mem_funcptr_t memfptr1 = &Object::set_value;
   mem_funcptr2_t memfptr2 = &Object::value;
-  (obj.*memfptr1)(888); // 调用函数, 必须使用obj.*, 而且需要()括起来
+  (obj.*memfptr1)(888);  // 调用函数, 必须使用obj.*, 而且需要()括起来
   val = (obj.*memfptr2)();
   std::cout << "val = " << val << std::endl;
 }
