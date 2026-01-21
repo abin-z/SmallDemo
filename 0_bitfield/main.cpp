@@ -50,8 +50,11 @@
 =========================================================================
 */
 
+#include <bitset>
 #include <cstdint>
 #include <cstdio>
+#include <iostream>
+#include <string>
 
 #include "fmt/core.h"
 
@@ -189,7 +192,7 @@ void testReg16()
   Reg16 reg = {0};  // initialize all bits to 0
 
   // -------------------- set some bits --------------------
-  reg.bits.b0 = 1;   // lowest bit
+  reg.bits.b0 = 1;  // lowest bit
   reg.bits.b3 = 1;
   reg.bits.b4 = 1;
   reg.bits.b7 = 1;   // last bit of low byte
@@ -269,6 +272,100 @@ void testReg16()
   printf("Full word: 0x%04X, Low byte: 0x%02X, High byte: 0x%02X\n", reg.word, reg.bytes.low, reg.bytes.high);
 }
 
+void testBitset()
+{
+  printf("===============================testBitset===============================\n");
+  std::bitset<8> b1;              // 00000000
+  std::bitset<8> b2(5);           // 00000101
+  std::bitset<8> b3("10101010");  // 10101010
+
+  std::cout << "=== init ===\n";
+  std::cout << "b1 = " << b1 << '\n';
+  std::cout << "b2 = " << b2 << '\n';
+  std::cout << "b3 = " << b3 << '\n';
+
+  // ------------------------------------------------------------
+  // 1. 单个位访问 / 修改
+  // ------------------------------------------------------------
+  std::cout << "\n=== access & modify ===\n";
+
+  std::cout << "b3[0] (LSB) = " << b3[0] << '\n';
+  std::cout << "b3[7] (MSB) = " << b3[7] << '\n';
+
+  b3.set(0);    // 置 1
+  b3.reset(1);  // 置 0
+  b3.flip(2);   // 取反
+
+  std::cout << "b3 after set/reset/flip = " << b3 << '\n';
+
+  // ------------------------------------------------------------
+  // 2. 查询接口
+  // ------------------------------------------------------------
+  std::cout << "\n=== query ===\n";
+
+  std::cout << "any  = " << b3.any() << '\n';
+  std::cout << "none = " << b3.none() << '\n';
+  std::cout << "all  = " << b3.all() << '\n';
+  std::cout << "count= " << b3.count() << '\n';
+  std::cout << "size = " << b3.size() << '\n';
+
+  // ------------------------------------------------------------
+  // 3. 位运算
+  // ------------------------------------------------------------
+  std::cout << "\n=== bit operations ===\n";
+
+  std::bitset<8> a("11001100");
+  std::bitset<8> c("10101010");
+
+  std::cout << "a      = " << a << '\n';
+  std::cout << "c      = " << c << '\n';
+  std::cout << "a & c  = " << (a & c) << '\n';
+  std::cout << "a | c  = " << (a | c) << '\n';
+  std::cout << "a ^ c  = " << (a ^ c) << '\n';
+  std::cout << "~a     = " << (~a) << '\n';
+
+  a <<= 2;
+  std::cout << "a <<= 2 -> " << a << '\n';
+
+  a >>= 1;
+  std::cout << "a >>= 1 -> " << a << '\n';
+
+  // ------------------------------------------------------------
+  // 4. 转换
+  // ------------------------------------------------------------
+  std::cout << "\n=== convert ===\n";
+
+  uint32_t value = b2.to_ulong();
+  std::string str = b2.to_string();
+
+  std::cout << "b2 to_ulong = " << value << '\n';
+  std::cout << "b2 to_string= " << str << '\n';
+
+  // ------------------------------------------------------------
+  // 5. 推荐用法：test() 比 operator[] 更安全
+  // ------------------------------------------------------------
+  std::cout << "\n=== safe access ===\n";
+
+  if (b2.test(2))
+  {
+    std::cout << "b2 bit 2 is set\n";
+  }
+
+  // ------------------------------------------------------------
+  // 6. 全量操作
+  // ------------------------------------------------------------
+  std::cout << "\n=== bulk operations ===\n";
+
+  b1.set();
+  std::cout << "b1 set all   = " << b1 << '\n';
+
+  b1.reset();
+  std::cout << "b1 reset all = " << b1 << '\n';
+
+  b1.flip();
+  std::cout << "b1 flip all  = " << b1 << '\n';
+}
+
 int main()
 {
   // -------------------- Flags 测试 --------------------
@@ -303,6 +400,7 @@ int main()
 
   testReg8();
   testReg16();
+  testBitset();
 
   return 0;
 }
