@@ -1,8 +1,9 @@
-#include <thread>
+#include <fmt/core.h>
+
 #include <chrono>
 #include <string>
+#include <thread>
 #include <utility>
-#include <fmt/core.h>
 
 /*
 多线程是一种并发编程技术，允许程序在多个线程中并行执行任务。每个线程都有自己的指令序列和局部变量，但共享全局内存。
@@ -29,13 +30,34 @@ void task02(double x, double y, double z, double &result)
   fmt::println("task02 thread id = {:#x}", threadId);
 }
 
+class Object
+{
+ public:
+  void operator()()
+  {
+    std::size_t threadId = std::hash<std::thread::id>{}(std::this_thread::get_id());
+    fmt::println("Object::operator() thread id = {:#x}", threadId);
+  }
+
+  void memberTask(int num, int &result)
+  {
+    // 模拟耗时任务
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    result = num * num;
+    std::size_t threadId = std::hash<std::thread::id>{}(std::this_thread::get_id());
+    fmt::println("Object::memberTask thread id = {:#x}", threadId);
+  }
+};
+
 int main()
 {
-  fmt::println("==============main start...  main thread id = {:#x}", std::hash<std::thread::id>{}(std::this_thread::get_id()));
+  fmt::println("==============main start...  main thread id = {:#x}",
+               std::hash<std::thread::id>{}(std::this_thread::get_id()));
   // 直接使用lambda表达式
-  std::thread t0([]
-                 { fmt::println("Hello, I am thread0. thread id = {:#x}", std::hash<std::thread::id>{}(std::this_thread::get_id())); });
-  t0.detach(); // 必须调用join或者detach, 否则会异常
+  std::thread t0([] {
+    fmt::println("Hello, I am thread0. thread id = {:#x}", std::hash<std::thread::id>{}(std::this_thread::get_id()));
+  });
+  t0.detach();  // 必须调用join或者detach, 否则会异常
 
   // 带参任务, 拷贝参数
   std::thread t1(task01, 100);
@@ -46,6 +68,17 @@ int main()
   std::thread t2(task02, 111, 3, 3, std::ref(ret2));
   t2.join();
   fmt::println("ret2 = {}", ret2);
+
+  // 成员函数任务
+  Object obj;
+  int ret3 = 0;
+  std::thread t3(&Object::memberTask, &obj, 9, std::ref(ret3));
+  t3.join();
+  fmt::println("ret3 = {}", ret3);
+
+  // 函数对象任务
+  std::thread t4(obj);
+  t4.join();
 
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
