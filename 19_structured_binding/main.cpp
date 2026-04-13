@@ -15,6 +15,11 @@ struct Point
   int y;
 };
 
+Point getPoint()
+{
+  return {10, 20};
+}
+void test();
 int main()
 {
   std::map<std::string, int> myMap = {{"apple", 5}, {"banana", 3}};
@@ -55,4 +60,17 @@ int main()
   double y1 = 0;
   std::tie(x1, y1, std::ignore) = t;
   std::cout << "x1 = " << x1 << ", y1 = " << y1 << "\n";
+
+  test();
+}
+
+void test()
+{
+  auto [x, y] = getPoint();
+  std::cout << "x = " << x << ", y = " << y << "\n";
+
+  // 注意: 结构化绑定需要注意生命周期问题
+  //   auto &[rx, ry] = getPoint();  // 错误: 不能绑定到临时对象的引用
+  const auto &[rx, ry] = getPoint();  // 正确: 只要绑定的是 const 引用，就能延长整个对象的生命周期
+  std::cout << "rx = " << rx << ", ry = " << ry << "\n";
 }
