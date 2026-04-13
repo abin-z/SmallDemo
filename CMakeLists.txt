@@ -42,6 +42,7 @@ add_subdirectory(0_about_c)     # 示例 0：C 语言基础模块
 add_subdirectory(0_bitfield)    # 示例 0：位域模块
 add_subdirectory(1_hello)
 add_subdirectory(2_vector)
+add_subdirectory(2_map)
 add_subdirectory(3_sizeof)
 add_subdirectory(4_metaprogram)
 add_subdirectory(5_multifiles)
