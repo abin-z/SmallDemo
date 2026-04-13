@@ -8,6 +8,8 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <tuple>
+#include <utility>
 
 struct Point
 {
@@ -19,6 +21,8 @@ Point getPoint()
 {
   return {10, 20};
 }
+
+class MyClass;
 void test();
 int main()
 {
@@ -64,6 +68,85 @@ int main()
   test();
 }
 
+// 为自定义类提供结构化绑定接口, 实现方式: 本质就是让类“看起来像 tuple”
+class MyClass
+{
+ public:
+  MyClass(int a, std::string n, std::string addr) : age(a), name(std::move(n)), address(std::move(addr)) {}
+
+  void set_age(int a)
+  {
+    age = a;
+  }
+  void set_name(const std::string &n)
+  {
+    name = n;
+  }
+  void set_address(const std::string &addr)
+  {
+    address = addr;
+  }
+
+  [[nodiscard]] int get_age() const
+  {
+    return age;
+  }
+  [[nodiscard]] const std::string &get_name() const
+  {
+    return name;
+  }
+  [[nodiscard]] const std::string &get_address() const
+  {
+    return address;
+  }
+
+  // 方式2: 提供结构化绑定接口, 但是需要提供一个 asTuple() 方法来返回一个 tuple 或 pair
+  [[nodiscard]] auto asTuple() const
+  {
+    return std::tie(age, name);  // 只暴露 age 和 name，不暴露 address
+  }
+
+ private:
+  int age{0};
+  std::string name;
+  std::string address;  // 不公开
+};
+
+// 步骤 1：定义元素个数
+namespace std
+{
+template <>
+struct tuple_size<MyClass> : std::integral_constant<size_t, 2>
+{
+};  // 只暴露 age 和 name，不暴露 address
+}  // namespace std
+
+// 步骤 2：定义元素类型
+namespace std
+{
+template <>
+struct tuple_element<0, MyClass>
+{
+  using type = int;
+};
+
+template <>
+struct tuple_element<1, MyClass>
+{
+  using type = std::string;
+};
+}  // namespace std
+
+// 步骤 3：提供 get<N>()（最关键）更专业一点（支持引用 & 修改）
+template <size_t N>
+auto get(const MyClass &obj)
+{
+  if constexpr (N == 0)
+    return obj.get_age();
+  else if constexpr (N == 1)
+    return obj.get_name();
+}
+
 void test()
 {
   auto [x, y] = getPoint();
@@ -73,4 +156,8 @@ void test()
   //   auto &[rx, ry] = getPoint();  // 错误: 不能绑定到临时对象的引用
   const auto &[rx, ry] = getPoint();  // 正确: 只要绑定的是 const 引用，就能延长整个对象的生命周期
   std::cout << "rx = " << rx << ", ry = " << ry << "\n";
+
+  MyClass obj(30, "Alice", "123 Main St");
+  auto [age, name] = obj;  // 结构化绑定会调用 get<N>() 来获取成员变量的值
+  std::cout << "age = " << age << ", name = " << name << "\n";
 }
