@@ -147,6 +147,18 @@ auto get(const MyClass &obj)
     return obj.get_name();
 }
 
+// 或者直接特化get<N>()函数, 数量少的时候比if constexpr更简单
+template <>
+auto get<0>(const MyClass &obj)
+{
+  return obj.get_age();
+}
+template <>
+auto get<1>(const MyClass &obj)
+{
+  return obj.get_name();
+}
+
 void test()
 {
   auto [x, y] = getPoint();
