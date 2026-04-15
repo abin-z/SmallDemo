@@ -20,10 +20,18 @@ void testPair()
 {
   std::pair<int, std::string> pair = std::make_pair(3, "hello world!");
   fmt::print("pair.first = {}, pair.second = {}\n", pair.first, pair.second);
+  // C++17 新增了 std::make_pair 的类模板参数推导，可以直接写 std::make_pair(42, "C++")，编译器会自动推断类型。
+  // C++17 还引入了结构化绑定（structured bindings），可以直接使用 auto [x, y] = pair2; 来解构
+  // std::pair，获取其中的元素。
   auto pair2 = std::make_pair(42, "C++");
   auto [x, y] = pair2;
   fmt::print("pair2.first = {}, pair2.second = {}\n", pair2.first, pair2.second);
   fmt::print("x = {}, y = {}\n", x, y);
+
+  std::pair p1{1, "one"};  // C++17 允许使用类模板参数推导直接初始化 std::pair
+  fmt::print("p1.first = {}, p1.second = {}\n", p1.first, p1.second);
+  auto otherPair = std::pair(3.14, 'A');
+  fmt::print("otherPair.first = {}, otherPair.second = {}\n", otherPair.first, otherPair.second);
 }
 
 void testTuple()
