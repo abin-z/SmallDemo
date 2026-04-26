@@ -1,4 +1,4 @@
-set(tgt_name ctad_demo)
+set(tgt_name CTAD_demo)
 
 file(GLOB_RECURSE headers CONFIGURE_DEPENDS *.h *.hpp)
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS *.c *.cpp *.cc *.cxx)
