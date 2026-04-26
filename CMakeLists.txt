@@ -69,3 +69,5 @@ add_subdirectory(18_string_view)
 add_subdirectory(19_structured_binding)
 add_subdirectory(20_if_constexpr)
 add_subdirectory(21_CTAD)
+add_subdirectory(22_RAII)
+
