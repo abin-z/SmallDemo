@@ -7,11 +7,11 @@ class GlobalObject
  public:
   GlobalObject()
   {
-    std::cout << "GlobalObject constructed" << std::endl;
+    std::cout << "GlobalObject constructed\n";
   }
   ~GlobalObject()
   {
-    std::cout << "GlobalObject destructed" << std::endl;
+    std::cout << "GlobalObject destructed\n";
   }
 };
 GlobalObject globalObj;
@@ -22,11 +22,11 @@ class StaticGlobalObject
  public:
   StaticGlobalObject()
   {
-    std::cout << "StaticGlobalObject constructed" << std::endl;
+    std::cout << "StaticGlobalObject constructed\n";
   }
   ~StaticGlobalObject()
   {
-    std::cout << "StaticGlobalObject destructed" << std::endl;
+    std::cout << "StaticGlobalObject destructed\n";
   }
 };
 static StaticGlobalObject staticGlobalObj;
@@ -36,11 +36,11 @@ class MemberObject
  public:
   MemberObject()
   {
-    std::cout << "MemberObject constructed" << std::endl;
+    std::cout << "MemberObject constructed\n";
   }
   ~MemberObject()
   {
-    std::cout << "MemberObject destructed" << std::endl;
+    std::cout << "MemberObject destructed\n";
   }
 };
 
@@ -49,11 +49,11 @@ class OuterClass
  public:
   OuterClass()
   {
-    std::cout << "OuterClass constructed" << std::endl;
+    std::cout << "OuterClass constructed\n";
   }
   ~OuterClass()
   {
-    std::cout << "OuterClass destructed" << std::endl;
+    std::cout << "OuterClass destructed\n";
   }
 
  private:
@@ -68,11 +68,11 @@ void func()
    public:
     StaticLocalObject()
     {
-      std::cout << "StaticLocalObject constructed" << std::endl;
+      std::cout << "StaticLocalObject constructed\n";
     }
     ~StaticLocalObject()
     {
-      std::cout << "StaticLocalObject destructed" << std::endl;
+      std::cout << "StaticLocalObject destructed\n";
     }
   } staticLocalObj;
 
@@ -82,11 +82,11 @@ void func()
    public:
     StackObject()
     {
-      std::cout << "StackObject constructed" << std::endl;
+      std::cout << "StackObject constructed\n";
     }
     ~StackObject()
     {
-      std::cout << "StackObject destructed" << std::endl;
+      std::cout << "StackObject destructed\n";
     }
   } stackObj;
 
@@ -95,11 +95,11 @@ void func()
    public:
     ThreadLocalObject()
     {
-      std::cout << "ThreadLocalObject constructed in thread " << std::this_thread::get_id() << std::endl;
+      std::cout << "ThreadLocalObject constructed in thread " << std::this_thread::get_id() << '\n';
     }
     ~ThreadLocalObject()
     {
-      std::cout << "ThreadLocalObject destructed in thread " << std::this_thread::get_id() << std::endl;
+      std::cout << "ThreadLocalObject destructed in thread " << std::this_thread::get_id() << '\n';
     }
   } threadLocalObj;
 
@@ -108,8 +108,8 @@ void func()
 
 int main()
 {
-  std::cout << "Main function started" << std::endl;
+  std::cout << "Main function started\n";
   func();
-  std::cout << "Main function ended" << std::endl;
+  std::cout << "Main function ended\n";
   return 0;
 }
