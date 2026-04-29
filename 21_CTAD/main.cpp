@@ -1,7 +1,24 @@
+#include <string>
 #include <tuple>
 #include <utility>
 
 #include "fmt/core.h"
+
+template <typename T>
+struct Box
+{
+  explicit Box(T t) : value(std::move(t)) {}
+  [[nodiscard]] std::string toString() const
+  {
+    return fmt::format("Box contains: {}", value);
+  }
+
+ private:
+  T value;
+};
+
+// 推导指引
+Box(const char *) -> Box<std::string>;
 
 int main()
 {
@@ -22,4 +39,11 @@ int main()
 
   std::tuple t1{1, 3.14, "hello"};  // 编译器自动推断为 std::tuple<int, double, const char*>
   fmt::print("t1: {}, {}, {}\n", std::get<0>(t1), std::get<1>(t1), std::get<2>(t1));
+
+  Box b1(10);      // 推导为 Box<int>
+  Box b2(3.14);    // 推导为 Box<double>
+  Box b("hello");  // Box<std::string>，而不是 Box<const char*>
+  fmt::print("b1: {}\n", b1.toString());
+  fmt::print("b2: {}\n", b2.toString());
+  fmt::print("b: {}\n", b.toString());
 }
