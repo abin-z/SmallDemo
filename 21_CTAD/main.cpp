@@ -1,3 +1,20 @@
+// CTAD（Class Template Argument Deduction，C++17）
+//
+// 作用：允许编译器根据构造函数参数自动推导类模板的模板参数，
+//       从而在使用时可以省略显式的 <T>，减少重复代码，提升可读性。
+//
+// 解决的问题：
+//   - 避免重复书写模板参数（参数中已包含类型信息）
+//   - 不再依赖 make_xxx 这类辅助函数来做类型推导
+//   - 使类模板的使用方式更接近函数模板（自动类型推导）
+//
+// 实现机制：
+//   - 基于构造函数参数进行模板参数推导
+//   - 编译器生成或使用“推导指引（deduction guide）”来完成推导
+//
+// 示例：
+//   std::pair p(1, 2.0);  // 推导为 std::pair<int, double>
+
 #include <string>
 #include <tuple>
 #include <utility>
