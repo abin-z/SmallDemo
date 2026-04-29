@@ -1,6 +1,7 @@
 #include <fmt/core.h>
 
 #include <cstddef>
+#include <cstdlib>
 
 class Object
 {

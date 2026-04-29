@@ -1,6 +1,7 @@
 #pragma once
 #include <fmt/core.h>
 #include <string>
+#include <cstdlib>
 
 class Person
 {

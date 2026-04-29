@@ -1,5 +1,6 @@
 #include <fmt/core.h>
 #include "person.hpp"
+#include <cstdlib>
 
 /*
 在C++中，operator new和new operator还是很有区别。new operator是c++内建的，无法改变其行为；而operator new 是可以根据自己的内存分配策略去重载的。

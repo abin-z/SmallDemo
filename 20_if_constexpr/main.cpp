@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <type_traits>
+#include <string>
 
 template <typename T>
 void print(T value)
