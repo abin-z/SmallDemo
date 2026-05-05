@@ -7,6 +7,23 @@
  *      // 编译期为 false 才会被编译
  *  }
  * 关键点：未被选中的分支在编译阶段直接丢弃（不会参与编译）
+ *
+ * 二、和普通 if 的区别（关键点）
+ *
+ *  普通 if：
+ *    if (std::is_integral_v<T>) {
+ *        // ❗即使条件为 false，这段代码仍然必须是合法的
+ *    }
+ *
+ *  if constexpr：
+ *    if constexpr (std::is_integral_v<T>) {
+ *        // ✅ 只有条件为 true 才会编译
+ *    } else {
+ *        // ✅ false 分支才会编译
+ *    }
+ *
+ *  👉 也就是说：
+ *  错误代码可以“藏”在不会被选中的分支里，编译器不会报错。
  */
 
 #include <iostream>
