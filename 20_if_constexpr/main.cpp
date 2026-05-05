@@ -27,8 +27,8 @@
  */
 
 #include <iostream>
-#include <type_traits>
 #include <string>
+#include <type_traits>
 
 template <typename T>
 void print(T value)
@@ -61,11 +61,11 @@ std::string to_string(T value)
 {
   if constexpr (std::is_same_v<T, std::string>)
   {
-    return value;
+    return value;  // 特化 std::string 类型，直接返回
   }
   else
   {
-    return std::to_string(value);
+    return std::to_string(value);  // 通用实现，调用 std::to_string
   }
 }
 
