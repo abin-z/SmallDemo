@@ -1,4 +1,5 @@
 // CTAD（Class Template Argument Deduction，C++17）
+// 定义：类模板参数推导（CTAD）是 C++17 引入的一项特性，允许编译器根据构造函数参数自动推导类模板的模板参数。
 //
 // 作用：允许编译器根据构造函数参数自动推导类模板的模板参数，
 //       从而在使用时可以省略显式的 <T>，减少重复代码，提升可读性。
@@ -15,11 +16,14 @@
 // 示例：
 //   std::pair p(1, 2.0);  // 推导为 std::pair<int, double>
 
+#include <array>
+#include <shared_mutex>
 #include <string>
 #include <tuple>
 #include <utility>
 
 #include "fmt/core.h"
+using namespace std::string_literals;
 
 template <typename T>
 struct Box
@@ -36,6 +40,8 @@ struct Box
 
 // 推导指引
 Box(const char *) -> Box<std::string>;
+
+void test();
 
 int main()
 {
@@ -63,4 +69,32 @@ int main()
   fmt::print("b1: {}\n", b1.toString());
   fmt::print("b2: {}\n", b2.toString());
   fmt::print("b: {}\n", b.toString());
+
+  // CTAD在拷贝初始化和通过new()分配内存时也同样适用：
+  auto otherPair = std::pair{42, "Hello"s};  // 同样会被推导
+  auto *ptr = new std::pair{42, "World"s};   // 使用new时也会被推导
+  fmt::print("otherPair: {}, {}\n", otherPair.first, otherPair.second);
+  fmt::print("ptr: {}, {}\n", ptr->first, ptr->second);
+
+  test();
+}
+
+void test()
+{
+  // shared_timed_mutex 是 C++14 引入的一个共享互斥量，允许多个线程同时读取，但只有一个线程可以写入。
+  // std::shared_mutex 是 C++17 引入的一个共享互斥量，功能与 std::shared_timed_mutex 类似，但不支持定时锁定。(常用)
+  {
+    // 锁保护：
+    std::shared_timed_mutex mut;
+    std::lock_guard<std::shared_timed_mutex> lck(mut);
+    // 数组：
+    std::array<int, 3> arr{1, 2, 3};
+  }
+
+  {
+    // CTAD后：直接使用构造函数参数来推导类型
+    std::shared_mutex mut;
+    std::lock_guard lck(mut);
+    std::array arr{1, 2, 3};
+  }
 }
