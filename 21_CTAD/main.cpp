@@ -17,6 +17,7 @@
 //   std::pair p(1, 2.0);  // 推导为 std::pair<int, double>
 
 #include <array>
+#include <memory>
 #include <shared_mutex>
 #include <string>
 #include <tuple>
@@ -42,7 +43,7 @@ struct Box
 Box(const char *) -> Box<std::string>;
 
 void test();
-
+void test02();
 int main()
 {
   fmt::print("Hello, CTAD!\n");
@@ -77,6 +78,7 @@ int main()
   fmt::print("ptr: {}, {}\n", ptr->first, ptr->second);
 
   test();
+  test02();
 }
 
 void test()
@@ -97,4 +99,14 @@ void test()
     std::lock_guard lck(mut);
     std::array arr{1, 2, 3};
   }
+}
+
+void test02()
+{
+  // 有了这个特性(CTAD)，许多make_Type函数可能不再需要，尤其是那些为类 “模拟” 模板推导的函数。
+  // 不过，有些工厂函数会执行额外的工作。例如，std::make_shared，它不仅创建shared_ptr，还确保控制块和指向的对象分配在同一内存区域：
+  // 控制块和int可能在内存的不同位置
+  std::shared_ptr<int> p(new int{10});
+  // 控制块和int在同一连续内存段
+  auto p2 = std::make_shared<int>(10);
 }
