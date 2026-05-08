@@ -10,21 +10,19 @@
 /*
  * C++ 锁机制专题
  *   互斥锁 (std::mutex) 是 C++11 引入的基础锁类型，用来保证多个线程访问共享资源时的互斥性
- *   递归锁 (std::recursive_mutex) 是 std::mutex 的一种变体，它允许同一个线程多次锁定同一互斥量，而不会发生死锁。但对于
- * 不同线程，它和普通的互斥锁一样，会表现为互斥行为 共享锁与独占锁 (std::shared_mutex)
- * 是一种新的锁机制，允许多个线程以“共享”方式并发读共享资源，而写线程则必须获得独占锁，阻塞其他读线程和写线程。 共享锁:
- * std::shared_lock<std::shared_mutex> lock(rwMutex);  // 共享锁 独占锁: std::unique_lock<std::shared_mutex>
- * lock(rwMutex);  // 独占锁
+ *   递归锁 (std::recursive_mutex) 是 std::mutex 的一种变体，它允许同一个线程多次锁定同一互斥量，而不会发生死锁。但对于不同线程，它和普通的互斥锁一样，会表现为互斥行为 
+ *   共享锁与独占锁 (std::shared_mutex) 是一种新的锁机制，允许多个线程以“共享”方式并发读共享资源，而写线程则必须获得独占锁，阻塞其他读线程和写线程。 
+ * 共享锁: std::shared_lock<std::shared_mutex> lock(rwMutex);  // 共享锁 
+ * 独占锁: std::unique_lock<std::shared_mutex> lock(rwMutex);  // 独占锁
+ *   std::shared_timed_mutex 是 C++14 引入的一个共享互斥量，功能与 std::shared_mutex 类似，但支持定时锁定, 也就是说可以尝试在一定时间内获取锁，如果超时则放弃获取锁。
  *
  * 防止死锁的方法：
  *   固定锁的顺序：让多个线程按照固定顺序来获取多个锁。
  *   避免长时间持有锁：避免长时间持有锁的操作，缩小锁的作用范围。
  *   使用 std::lock：std::lock 可以同时锁定多个互斥量，避免死锁。
  *
- *   std::lock
- * 用于同时锁定多个互斥量。它会尝试以相同的顺序获取所有互斥量。如果某个互斥量已经被锁定，它会阻塞直到所有锁都成功获取
- *   std::lock 本身不会管理锁的生命周期，它只是确保多个互斥量不会发生死锁。
- *   你仍然需要使用 std::lock_guard 或其他 RAII
+ *   std::lock 用于同时锁定多个互斥量。它会尝试以相同的顺序获取所有互斥量。如果某个互斥量已经被锁定，它会阻塞直到所有锁都成功获取
+ *   std::lock 本身不会管理锁的生命周期，它只是确保多个互斥量不会发生死锁。你仍然需要使用 std::lock_guard 或其他 RAII
  * 风格的锁来自动释放锁，否则锁会保持在任务完成后仍然处于锁定状态，这会导致其他线程无法获取这些锁，从而发生死锁。
  *   std::lock(mtx1, mtx2, ...);  // 尝试同时锁定 mtx1 和 mtx2
  *   std::lock_guard<std::mutex> lock1(mtx1, std::adopt_lock);  // 使用 adopt_lock 告诉 lock_guard 不要再尝试锁定 mtx1
